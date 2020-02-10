@@ -1,0 +1,70 @@
+---
+title: "ncov 省份图"
+output: html_document
+---
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all()
+library(leafletCN)
+```
+
+主要包含两个函数`plot_province_map()`和`plot_province_map2()`
+
+## 1. `plot_province_map2()`
+
+仿照`ncovr::plot_map()`写的，把分组稍微作了修改，提供
+`bins`参数，如果有城市病例为0，则必存在分组0以方便关注哪些城市没有ncov病例。以外，
+添加了`map_title`参数设置map的名字。
+
+读取数据，加载函数
+
+```{r data,cache=TRUE}
+ncov <- ncovr::get_ncov()
+```
+
+湖北省ncov图
+
+```{r map2_hubei}
+plot_province_map2(ncov, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000))
+```
+广东省ncov图
+
+```{r map2_guangdong}
+plot_province_map2(ncov, "广东省", bins = c(0, 10, 100, 200))
+```
+
+## 2. `plot_province_map()`
+
+我们发现`plot_province_map2()`画的地图都有一个蓝色的border，这是因为
+`leaflet::geojsonMap()`中`tileType`参数所致；此外，它是自动对各城市颜色进行设置，
+没有感染ncov的城市（例数为0）不能突出显示。为了去除map周围的border, 
+显示，手动指定例数为0的城市为白色，写了函数`plot_province_map()`。**后续发现可以
+通过修改`leaflet::geojsonMap()`函数, `tileType = NULL`时去除border**。
+
+```{r map_hubei}
+# 例数为0的城市以白色突出显示
+plot_province_map(ncov, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000))
+```
+
+```{r map_guangdong}
+plot_province_map(ncov, "广东省", bins = c(0, 10, 100, 200))
+```
+
+## 问题
+
+看湖北省的地图我们发现居然有两个市为0，顿时表示怀疑。进一步通过地图发现这两个城市为
+襄樊和恩施土家族苗族自治州。
+
+湖北省数据如下所示，发现所有的市都有病例
+
+```{r hubei_stat}
+dplyr::filter(ncov$area, provinceName == "湖北省")$cities[[1]]
+```
+
+实际有病例而图中表现为0可能有两种原因：
+
+1. **leafletCN**中地理数据比较旧，实际上一些城市已经改名，如襄樊已经改成襄阳。
+1. 统计数据的地名采用了缩写，如"恩施州"实际上是"恩施土家族苗族自治州"。
+
+想要精确进行展示，还需要对**leafletCN**进行更新和统计的ncov数据进行修正。
