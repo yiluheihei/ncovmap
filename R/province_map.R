@@ -49,6 +49,10 @@ plot_province_map <- function(ncov,
       province,
       province_cities_ncov,
       valuevar = ~ key_level)
+
+    # sort the `province_cities_ncov` according to city names in `province_map`
+    province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
+
     pal <- leaflet::colorFactor(palette = color, domain = province_map$value)
 
     # if the count is 0, manual set the color as white
@@ -61,36 +65,41 @@ plot_province_map <- function(ncov,
 
     res <- leaflet::leaflet(province_map) %>%
       leaflet::addPolygons(stroke = TRUE,
-        smoothFactor = 1,
-        fillOpacity = 0.7,
-        weight = 1,
-        color = map_colors,
-        popup =  paste(
-          province_cities_ncov$cityName,
-          province_cities_ncov$key)
+                           smoothFactor = 1,
+                           fillOpacity = 0.7,
+                           weight = 1,
+                           color = map_colors,
+                           popup =  paste(
+                             province_cities_ncov$cityName,
+                             province_cities_ncov$key)
       ) %>%
       leaflet::addLegend(legend_position,
-        colors = legend_colors,
-        labels = names(legend_colors),
-        labFormat = leaflet::labelFormat(prefix = ""),
-        opacity = 1)
+                         colors = legend_colors,
+                         labels = names(legend_colors),
+                         labFormat = leaflet::labelFormat(prefix = ""),
+                         opacity = 1)
   }
   if (scale == "log") {
     province_cities_ncov <- dplyr::mutate(province_cities_ncov,
-      key_log = ifelse(key == 0, 0, log10(key)))
-    province_map <- leafletCN::leafletGeo(province, province_cities_ncov, valuevar = ~key_log)
+                                          key_log = ifelse(key == 0, 0, log10(key)))
+    province_map <- leafletCN::leafletGeo(province, province_cities_ncov,
+                                          valuevar = ~key_log)
+
+    # sort the `province_cities_ncov` according to city names in `province_map`
+    province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
+
     pal <- leaflet::colorNumeric(palette = color, domain = province_map$value)
     # pal <- leaflet::colorBin(color, province_map$value)
 
     res <- leaflet::leaflet(province_map) %>%
       leaflet::addPolygons(stroke = TRUE,
-        smoothFactor = 1,
-        fillOpacity = 0.7,
-        weight = 1,
-        color = ~ pal(value),
-        popup =  paste(
-          province_cities_ncov$cityName,
-          province_cities_ncov$key)
+                           smoothFactor = 1,
+                           fillOpacity = 0.7,
+                           weight = 1,
+                           color = ~ pal(value),
+                           popup =  paste(
+                             province_cities_ncov$cityName,
+                             province_cities_ncov$key)
       ) %>%
       leaflet::addLegend(
         legend_position,
@@ -109,8 +118,9 @@ plot_province_map <- function(ncov,
   )
 
   res %>% leaflet::addControl(title, position = "topleft",
-    className="map-title")
+                              className="map-title")
 }
+
 
 #' @export
 plot_province_map2 <- function(ncov,
@@ -142,6 +152,11 @@ plot_province_map2 <- function(ncov,
       include.lowest = TRUE,
       right = FALSE)
 
+    # sort the `province_cities_ncov` according to city names in `province_map`
+    province_map <- leafletCN::leafletGeo(province)
+    province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
+    province_cities_ncov$cityName <- province_map$name
+
     res <-leafletCN::geojsonMap(
       dat = province_cities_ncov,
       mapName = province,
@@ -159,6 +174,12 @@ plot_province_map2 <- function(ncov,
   if (scale == "log") {
     province_cities_ncov$key_log <- log10(province_cities_ncov$key)
     province_cities_ncov$key_log[province_cities_ncov$key == 0] <- NA
+
+    # sort the `province_cities_ncov` according to city names in `province_map`
+    province_map <- leafletCN::leafletGeo(province)
+    province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
+    province_cities_ncov$cityName <- province_map$name
+
     res <-ncovr::geojsonMap_legendless(
       dat = province_cities_ncov,
       mapName = province,
@@ -220,7 +241,7 @@ tidy_province_ncov <- function(ncov, province) {
     gsub("市|自治州|地区|回族自治州|蒙古自治州|哈萨克自治州", "", .) # to be determined
 
   city_zero <- sapply(province_cities_ncov$cityName,
-         function(x) any(grepl(x, province_cities, fixed = TRUE))
+                      function(x) any(grepl(x, province_cities, fixed = TRUE))
   )
 
   city_zero <- setdiff(province_cities, province_cities_ncov$cityName)
@@ -238,6 +259,28 @@ tidy_province_ncov <- function(ncov, province) {
     match(province_cities, province_cities_ncov$cityName), ]
 
   province_cities_ncov
+}
+
+
+#' sort province data according to city names of map
+sort_province_ncov_map <- function(province_cities_ncov, map) {
+  china_cities <- readr::read_csv("data-raw/china_city_list.csv")
+  # data correction
+  china_cities <- dplyr::mutate(china_cities,
+                                Province_EN = dplyr::case_when(
+                                  Province_EN == "anhui" ~ "Anhui",
+                                  Province_EN == "guizhou" ~ "Guizhou",
+                                  Province_EN == "hubei" ~ "Hubei",
+                                  Province_EN == "xinjiang" ~ "Xinjiang",
+                                  TRUE ~ Province_EN
+                                ))
+  cities <-  china_cities$City_Admaster[
+    match(province_cities_ncov$cityName, china_cities$City)]
+  province_cities_ncov <-
+    province_cities_ncov[match(map$name, cities), ]
+
+  province_cities_ncov
+
 }
 
 # Title css style
