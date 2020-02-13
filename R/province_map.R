@@ -12,6 +12,7 @@
 #' category, only worked while \code{scale} is "cat"
 #'
 #' @importFrom magrittr %>%
+#' @import leafletCN
 #' @export
 #'
 #' @examples
@@ -51,7 +52,7 @@ plot_province_map <- function(ncov,
       valuevar = ~ key_level)
 
     # sort the `province_cities_ncov` according to city names in `province_map`
-    province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
+    # province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
 
     pal <- leaflet::colorFactor(palette = color, domain = province_map$value)
 
@@ -86,7 +87,7 @@ plot_province_map <- function(ncov,
                                           valuevar = ~key_log)
 
     # sort the `province_cities_ncov` according to city names in `province_map`
-    province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
+    # province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
 
     pal <- leaflet::colorNumeric(palette = color, domain = province_map$value)
     # pal <- leaflet::colorBin(color, province_map$value)
@@ -153,9 +154,9 @@ plot_province_map2 <- function(ncov,
       right = FALSE)
 
     # sort the `province_cities_ncov` according to city names in `province_map`
-    province_map <- leafletCN::leafletGeo(province)
-    province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
-    province_cities_ncov$cityName <- province_map$name
+    # province_map <- leafletCN::leafletGeo(province)
+    # province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
+    # province_cities_ncov$cityName <- province_map$name
 
     res <-leafletCN::geojsonMap(
       dat = province_cities_ncov,
@@ -176,9 +177,9 @@ plot_province_map2 <- function(ncov,
     province_cities_ncov$key_log[province_cities_ncov$key == 0] <- NA
 
     # sort the `province_cities_ncov` according to city names in `province_map`
-    province_map <- leafletCN::leafletGeo(province)
-    province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
-    province_cities_ncov$cityName <- province_map$name
+    # province_map <- leafletCN::leafletGeo(province)
+    # province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
+    # province_cities_ncov$cityName <- province_map$name
 
     res <-ncovr::geojsonMap_legendless(
       dat = province_cities_ncov,
@@ -232,17 +233,26 @@ format_labels <- function(bins, sep = "~") {
   labels
 }
 
+#' Since the latest data was uesed for visualization, only correct the latest data
+#'
+#' @param ncov
+#'
+#' @importFrom dplyr filter inner_join mutate select
+correct_ncov_cities <- function(ncov, province) {
+  p_ncov <- dplyr::filter(ncov$area, provinceName == province)$cities[[1]]
+
+  res <- inner_join(p_ncov, city_reference, by = c("cityName" = "origin")) %>%
+    mutate(cityName = corrected) %>%
+    select(cityName:deadCount)
+
+  res
+}
+
 
 # Extract and preprocess nconv data of provinces
 tidy_province_ncov <- function(ncov, province) {
-  province_ncov <- dplyr::filter(ncov$area, provinceName == province)
-  province_cities_ncov <-  province_ncov$cities[[1]]
-  province_cities <- leafletCN::regionNames(province) %>%
-    gsub("市|自治州|地区|回族自治州|蒙古自治州|哈萨克自治州", "", .) # to be determined
-
-  city_zero <- sapply(province_cities_ncov$cityName,
-                      function(x) any(grepl(x, province_cities, fixed = TRUE))
-  )
+  province_cities_ncov <- correct_ncov_cities(ncov, province)
+  province_cities <- leafletCN::regionNames(province)
 
   city_zero <- setdiff(province_cities, province_cities_ncov$cityName)
 
@@ -250,7 +260,7 @@ tidy_province_ncov <- function(ncov, province) {
   if(!length(city_zero)) {
     return(province_cities_ncov)
   } else {
-    city_zero <- data.frame(city_zero, 0, 0, 0, 0, NaN)
+    city_zero <- data.frame(city_zero, 0, 0, 0, 0, 0)
     names(city_zero) <- names(province_cities_ncov)
     province_cities_ncov <- dplyr::bind_rows(province_cities_ncov, city_zero)
   }
@@ -262,26 +272,26 @@ tidy_province_ncov <- function(ncov, province) {
 }
 
 
-#' sort province data according to city names of map
-sort_province_ncov_map <- function(province_cities_ncov, map) {
-  china_cities <- readr::read_csv("data-raw/china_city_list.csv")
-  # data correction
-  china_cities <- dplyr::mutate(china_cities,
-                                Province_EN = dplyr::case_when(
-                                  Province_EN == "anhui" ~ "Anhui",
-                                  Province_EN == "guizhou" ~ "Guizhou",
-                                  Province_EN == "hubei" ~ "Hubei",
-                                  Province_EN == "xinjiang" ~ "Xinjiang",
-                                  TRUE ~ Province_EN
-                                ))
-  cities <-  china_cities$City_Admaster[
-    match(province_cities_ncov$cityName, china_cities$City)]
-  province_cities_ncov <-
-    province_cities_ncov[match(map$name, cities), ]
-
-  province_cities_ncov
-
-}
+#' #' sort province data according to city names of map
+#' sort_province_ncov_map <- function(province_cities_ncov, map) {
+#'   china_cities <- readr::read_csv("data-raw/china_city_list.csv")
+#'   # data correction
+#'   china_cities <- dplyr::mutate(china_cities,
+#'                                 Province_EN = dplyr::case_when(
+#'                                   Province_EN == "anhui" ~ "Anhui",
+#'                                   Province_EN == "guizhou" ~ "Guizhou",
+#'                                   Province_EN == "hubei" ~ "Hubei",
+#'                                   Province_EN == "xinjiang" ~ "Xinjiang",
+#'                                   TRUE ~ Province_EN
+#'                                 ))
+#'   cities <-  china_cities$City_Admaster[
+#'     match(province_cities_ncov$cityName, china_cities$City)]
+#'   province_cities_ncov <-
+#'     province_cities_ncov[match(map$name, cities), ]
+#'
+#'   province_cities_ncov
+#'
+#' }
 
 # Title css style
 # https://stackoverflow.com/questions/49072510/r-add-title-to-leaflet-map
