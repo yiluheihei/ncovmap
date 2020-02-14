@@ -119,7 +119,7 @@ plot_province_map <- function(ncov,
 
 
 #' @param tile_type function to define tile like amap or
-#' \code{\link[leaflet]{addTiles}}
+#' \code{\link[leaflet]{addTiles}}, default NULL
 #' @rdname plot_province_map
 #' @export
 plot_province_map2 <- function(ncov,
@@ -130,7 +130,7 @@ plot_province_map2 <- function(ncov,
                                color = "Reds",
                                scale = c("cat", "log"),
                                bins = c(0, 10, 100, 1000),
-                               tile_type = leaflet::addPolygons,
+                               tile_type = NULL,
                                map_title = paste0(province, "nCoV")) {
   key <- match.arg(key)
   scale <- match.arg(scale)
@@ -236,7 +236,17 @@ format_labels <- function(bins, sep = "~") {
 #' @importFrom dplyr filter inner_join mutate select
 #' @noRd
 correct_ncov_cities <- function(ncov, province) {
-  p_ncov <- dplyr::filter(ncov$area, provinceName == province)$cities[[1]]
+  # xianggang aomen and taiwan, no cities ncov data
+  ref_names <- leafletCN::mapNames
+  no_cities <- match(c("Hong Kong", "Macau", "Taiwan"),
+    ref_names$name_en) %>%
+    ref_names[c("name", "label")][., ] %>%
+    unlist()
+  if (province %in% no_cities) {
+    stop("ncov does not contian data on Hong Kang, Macau, or Taiwan")
+  } else {
+    p_ncov <- dplyr::filter(ncov$area, provinceName == province)$cities[[1]]
+  }
 
   res <- inner_join(p_ncov, city_reference, by = c("cityName" = "origin")) %>%
     mutate(cityName = corrected) %>%
