@@ -248,7 +248,8 @@ correct_ncov_cities <- function(ncov, province) {
     p_ncov <- dplyr::filter(ncov$area, provinceName == province)$cities[[1]]
   }
 
-  res <- inner_join(p_ncov, city_reference, by = c("cityName" = "origin")) %>%
+  res <- inner_join(p_ncov, city_reference,
+    by = c("cityName" = "origin")) %>%
     mutate(cityName = corrected) %>%
     select(cityName:deadCount)
 

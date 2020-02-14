@@ -39,7 +39,7 @@ province_cities <-
               ~ data.frame(Province = .y, City_Admaster = .x)) %>%
   dplyr::bind_rows() %>%
   mutate(Province = substr(Province, 1, 2)) %>%
-  mutate(Province = case_when(
+  mutate(Province = dplyr::case_when(
     Province == "黑龙" ~ "黑龙江",
     Province == "内蒙" ~ "内蒙古",
     TRUE ~ Province
@@ -74,8 +74,8 @@ distinguish_cities <- function(city, ncov_city) {
 }
 city_distg <- purrr::map2(cities_list, ncov_cities_list, distinguish_cities)
 
-# 378 cities is consistent
-map(city_distg, ~.x$consistent) %>% lengths %>% sum
+# cities is consistent
+purrr::map(city_distg, ~.x$consistent) %>% lengths %>% sum
 
 
 
@@ -114,13 +114,13 @@ city_need_corrected <- tibble::tribble(
   "宁东",                "(宁东)",             "宁夏回族自治区"
 )
 city_need_corrected$type <-  "error"
-city_correct <- map2(city_distg, province_has_cities,
+city_correct <- purrr::map2(city_distg, province_has_cities,
                      ~ data.frame(origin = .x$consistent_ncov,
                                   corrected = .x$consistent,
                                   Province = .y)) %>%
-  bind_rows()
+  dplyr::bind_rows()
 city_correct$type <-  "correct"
-city_reference <- bind_rows(city_correct, city_need_corrected)
+city_reference <- dplyr::bind_rows(city_correct, city_need_corrected)
 usethis::use_data(city_reference, internal = TRUE, overwrite = TRUE)
 
 # not used now
