@@ -65,16 +65,18 @@ ncov数据中有个别城市名字是用缩写，比如湖北省的如"恩施州
 
 ## 例子
 
-读取数据，加载函数
+读取数据，加载包
 
-```{r data,cache=TRUE}
+```{r data}
+if (!require(devtools)) install.packages("devtools")
+if (!require(ncovmap)) devtools::install_github("yiluheihei/ncovmap")
+library(ncovmap)
 ncov <- ncovr::get_ncov()
 ```
 
 `plot_province_map()`画图
 
 ```{r map_hubei}
-devtools::install_github("yiluheihei/ncovmap")
 library(ncovmap)
 # 例数为0的城市以白色突出显示
 plot_province_map(ncov, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000))
