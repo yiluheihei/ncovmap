@@ -265,9 +265,7 @@ tidy_province_ncov <- function(ncov, province) {
   city_zero <- setdiff(province_cities, province_cities_ncov$cityName)
 
   # bind the cities which has no ncov
-  if(!length(city_zero)) {
-    return(province_cities_ncov)
-  } else {
+  if (length(city_zero)) {
     city_zero <- data.frame(city_zero, 0, 0, 0, 0, 0)
     names(city_zero) <- names(province_cities_ncov)
     province_cities_ncov <- dplyr::bind_rows(province_cities_ncov, city_zero)
