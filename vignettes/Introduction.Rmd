@@ -18,15 +18,52 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(ncovmap)
 library(magrittr)
+library(leafletCN)
 ```
 
-主要包含两个函数`plot_province_map()`和`plot_province_map2()`
 
-## 1. `plot_province_map2()`
+用leafletCN画省份疫情图存在两个问题，一是leafletCN中地图数据跟ncov数据中城市的
+名字不一致，可能是一些城市已经改名，如襄樊已经改成襄阳，北京市早已把撤县设区，
+而现有数据中还是县；或者是ncov中采用了地名的缩写。二是需要把除该省之外的区域去
+掉，以便很好的展示，虽然通过修改`geojsonMap`中`tileType`参数可以实现，但是map
+周围存在边线（如下图所示存在蓝色边线）。
 
-仿照`ncovr::plot_map()`写的，把分组稍微作了修改，提供
-`bins`参数，如果有城市病例为0，则必存在分组0以方便关注哪些城市没有ncov病例。以外，
-添加了`map_title`参数设置map的名字。
+```{r old-leafletCN-map}
+knitr::include_graphics("old_leafletCN_ncov_map.png")
+```
+
+## 更新leafletCN中地图数据
+
+所以，要想画疫情省份图，首先对
+[leafletCN](https://github.com/Lchiffon/leafletCN)中地图数据更新，我把其中的关于省和直辖市地图数据更新了一下，然后修改了`geojsonMap()`可通过设置
+`tileType = NULL`去除map周围边线。可以从
+[这里](https://github.com/Lchiffon/leafletCN)安装。目前没有对地级市数据进行更
+新，并且我所用的地图数据也不是最新的数据，可能存在个别城市名字错误(目前还没发
+现任何错误)。
+
+```{r eval=FALSE}
+# 安装修改后的leafletCN
+devtools::install_github("yiluheihei/leafletCN")
+```
+
+## 画省份的疫情图
+
+ncov数据中有个别城市名字是用缩写，比如湖北省的如"恩施州"实际上是"恩施土家族苗
+族自治州"。所以再画图之前首先需要对ncov中城市的名字和地图数据中的名字进行对应。
+
+然后就是写函数画图，主要包含两个函数`plot_province_map()`和
+`plot_province_map2()`。
+
+1. `plot_province_map()`。把数据分组稍微作了修改，提供`bins`参数，为了突出没有感染ncov的城市（例数为0）
+，只要有0例的城市存在，就手动设置它的颜色为白色。如
+`bins = c(1, 10, 100)`分组为1~9,10~99,>=100，如果存在例数为0的城市，那么会多一
+个0组。
+
+2. `plot_province_map2()`。完全参考`ncovr::plot_map()`写的，只是添加了`bins`参数。
+
+另外还参考`ncovr::plot_map()`的`method`参数，感觉省份图基本用不到`log`处理，目前只是把bins简单设置成了4。
+
+## 例子
 
 读取数据，加载函数
 
@@ -34,26 +71,11 @@ library(magrittr)
 ncov <- ncovr::get_ncov()
 ```
 
-湖北省ncov图
-
-```{r map2_hubei}
-plot_province_map2(ncov, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000))
-```
-广东省ncov图
-
-```{r map2_guangdong}
-plot_province_map2(ncov, "广东省", bins = c(0, 10, 100, 200))
-```
-
-## 2. `plot_province_map()`
-
-我们发现`plot_province_map2()`画的地图都有一个蓝色的border，这是因为
-`leaflet::geojsonMap()`中`tileType`参数所致；此外，它是自动对各城市颜色进行设置，
-没有感染ncov的城市（例数为0）不能突出显示。为了去除map周围的border, 
-显示，手动指定例数为0的城市为白色，写了函数`plot_province_map()`。**后续发现可以
-通过修改`leaflet::geojsonMap()`函数, `tileType = NULL`时去除border**。
+`plot_province_map()`画图
 
 ```{r map_hubei}
+devtools::install_github("yiluheihei/ncovmap")
+library(ncovmap)
 # 例数为0的城市以白色突出显示
 plot_province_map(ncov, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000))
 ```
@@ -62,25 +84,17 @@ plot_province_map(ncov, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000))
 plot_province_map(ncov, "广东省", bins = c(0, 10, 100, 200))
 ```
 
-## 问题
+`plot_province_map2()`画图
 
-看湖北省的地图我们发现居然有两个市为0，顿时表示怀疑。进一步通过地图发现这两个城市为
-襄樊和恩施土家族苗族自治州。
-
-湖北省数据如下所示，发现所有的市都有病例
-
-```{r hubei_stat}
-dplyr::filter(ncov$area, provinceName == "湖北省")$cities[[1]]
+```{r map2_hubei}
+plot_province_map2(ncov, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000))
 ```
 
-实际有病例而图中表现为0可能有两种原因：
+```{r map2_guangdong}
+plot_province_map2(ncov, "广东省", bins = c(0, 10, 100, 200))
+```
 
-1. **leafletCN**中地理数据比较旧，实际上一些城市已经改名，如襄樊已经改成襄阳。
-1. 统计数据的地名采用了缩写，如"恩施州"实际上是"恩施土家族苗族自治州"。
-
-想要精确进行展示，还需要对**leafletCN**进行更新和统计的ncov数据进行修正。
-
-## all provinces
+直接画所有省份图，台湾,香港,澳门数据没有细分，不需要画。
  
 ```{r all-province}
 # 没有台湾,香港,澳门等三地数据
@@ -91,4 +105,14 @@ provinces <- leafletCN::regionNames("china") %>%
 htmltools::tagList(purrr::map(provinces, 
   ~ plot_province_map(ncov, .x, bins = c(0, 10, 100, 500, 1000, 10000))))
 ```
+
+虽然简单几行代码就可以把所有省份疫情图画出来，但是实际上根据各省份例数不同，个
+性化设置`bins`才能更好的进行展示。以上面最后一张上海疫情图为例，实际上海每个区
+疫情都在100以内，可以把bins设置小一些。
+
+```{r shanghai-bin}
+plot_province_map(ncov, "上海市", bins = c(0, 5, 10, 20, 60))
+```
+
+
 
