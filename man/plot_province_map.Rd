@@ -2,6 +2,7 @@
 % Please edit documentation in R/province_map.R
 \name{plot_province_map}
 \alias{plot_province_map}
+\alias{plot_province_map2}
 \title{Plot province maps for nCoV}
 \usage{
 plot_province_map(
@@ -13,11 +14,24 @@ plot_province_map(
   color = "Reds",
   scale = c("cat", "log"),
   bins = c(0, 10, 100, 1000),
-  map_title = paste0(province, "nCov map")
+  map_title = paste0(province, "nCoV")
+)
+
+plot_province_map2(
+  ncov,
+  province,
+  key = c("confirmedCount", "suspectedCount", "curedCount", "deadCount"),
+  legend_position = c("bottomright", "topright", "bottomleft", "topleft"),
+  legend_title = "Confirmed",
+  color = "Reds",
+  scale = c("cat", "log"),
+  bins = c(0, 10, 100, 1000),
+  tile_type = leaflet::addPolygons,
+  map_title = paste0(province, "nCoV")
 )
 }
 \arguments{
-\item{ncov}{ncov the dataset obtained by \code{\link{get_ncov}}}
+\item{ncov}{ncov the dataset obtained by \code{\link[ncovr]{get_ncov}}}
 
 \item{province}{which province to plot}
 
@@ -35,13 +49,10 @@ plot_province_map(
 
 \item{map_title}{map title
 category, only worked while \code{scale} is "cat"}
+
+\item{tile_type}{function to define tile like amap or
+\code{\link[leaflet]{addTiles}}}
 }
 \description{
 Plot province maps for nCoV
-}
-\examples{
-\dontrun{
-ncov <- get_ncov()
-plot_province_map(ncov, "婀栧寳鐪<81>", bins = bins = c(1, 100, 500, 1000, 10000))
-}
 }

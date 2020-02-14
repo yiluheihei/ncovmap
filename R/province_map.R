@@ -1,6 +1,6 @@
 #' Plot province maps for nCoV
 #'
-#' @param ncov ncov the dataset obtained by \code{\link{get_ncov}}
+#' @param ncov ncov the dataset obtained by \code{\link[ncovr]{get_ncov}}
 #' @param province which province to plot
 #' @param key the feature to plot
 #' @param legend_title legend title
@@ -13,13 +13,8 @@
 #'
 #' @importFrom magrittr %>%
 #' @import leafletCN
+#' @importFrom htmltools tags HTML
 #' @export
-#'
-#' @examples
-#' \dontrun{
-#' ncov <- get_ncov()
-#' plot_province_map(ncov, "湖北省", bins = bins = c(1, 100, 500, 1000, 10000))
-#' }
 plot_province_map <- function(ncov,
                               province,
                               key = c("confirmedCount", "suspectedCount", "curedCount", "deadCount"),
@@ -28,7 +23,7 @@ plot_province_map <- function(ncov,
                               color = "Reds",
                               scale = c("cat", "log"),
                               bins = c(0, 10, 100, 1000),
-                              map_title = paste0(province, "nCoV 情况")) {
+                              map_title = paste0(province, "nCoV")) {
   key <- match.arg(key)
   scale <- match.arg(scale)
   legend_position <- match.arg(legend_position)
@@ -119,10 +114,13 @@ plot_province_map <- function(ncov,
   )
 
   res %>% leaflet::addControl(title, position = "topleft",
-                              className="map-title")
+                              className = "map-title")
 }
 
 
+#' @param tile_type function to define tile like amap or
+#' \code{\link[leaflet]{addTiles}}
+#' @rdname plot_province_map
 #' @export
 plot_province_map2 <- function(ncov,
                                province,
@@ -130,11 +128,10 @@ plot_province_map2 <- function(ncov,
                                legend_position = c("bottomright", "topright", "bottomleft", "topleft"),
                                legend_title ='Confirmed',
                                color = "Reds",
-                               stroke = FALSE,
                                scale = c("cat", "log"),
                                bins = c(0, 10, 100, 1000),
                                tile_type = leaflet::addPolygons,
-                               map_title = paste0(province, "nCoV情况")) {
+                               map_title = paste0(province, "nCoV")) {
   key <- match.arg(key)
   scale <- match.arg(scale)
   legend_position <- match.arg(legend_position)
@@ -158,7 +155,7 @@ plot_province_map2 <- function(ncov,
     # province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
     # province_cities_ncov$cityName <- province_map$name
 
-    res <-leafletCN::geojsonMap(
+    res <- leafletCN::geojsonMap(
       dat = province_cities_ncov,
       mapName = province,
       colorMethod = "factor",
@@ -169,8 +166,7 @@ plot_province_map2 <- function(ncov,
         province_cities_ncov$cityName,
         province_cities_ncov$key),
       legendTitle = legend_title,
-      tileType = tile_type,
-      stroke = stroke)
+      tileType = tile_type)
   }
   if (scale == "log") {
     province_cities_ncov$key_log <- log10(province_cities_ncov$key)
@@ -181,7 +177,7 @@ plot_province_map2 <- function(ncov,
     # province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
     # province_cities_ncov$cityName <- province_map$name
 
-    res <-ncovr::geojsonMap_legendless(
+    res <- ncovr::geojsonMap_legendless(
       dat = province_cities_ncov,
       mapName = province,
       palette = color,
@@ -215,6 +211,7 @@ plot_province_map2 <- function(ncov,
 }
 
 #' Format legend labels
+#' @noRd
 format_labels <- function(bins, sep = "~") {
   bins <- setdiff(bins, c(0, 1)) %>%
     c(0, 1, .)
@@ -235,9 +232,9 @@ format_labels <- function(bins, sep = "~") {
 
 #' Since the latest data was uesed for visualization, only correct the latest data
 #'
-#' @param ncov
-#'
+#' @param ncov ncov data
 #' @importFrom dplyr filter inner_join mutate select
+#' @noRd
 correct_ncov_cities <- function(ncov, province) {
   p_ncov <- dplyr::filter(ncov$area, provinceName == province)$cities[[1]]
 
@@ -249,7 +246,8 @@ correct_ncov_cities <- function(ncov, province) {
 }
 
 
-# Extract and preprocess nconv data of provinces
+#' Extract and preprocess nconv data of provinces
+#' @noRd
 tidy_province_ncov <- function(ncov, province) {
   province_cities_ncov <- correct_ncov_cities(ncov, province)
   province_cities <- leafletCN::regionNames(province)
@@ -272,29 +270,29 @@ tidy_province_ncov <- function(ncov, province) {
 }
 
 
-#' #' sort province data according to city names of map
-#' sort_province_ncov_map <- function(province_cities_ncov, map) {
-#'   china_cities <- readr::read_csv("data-raw/china_city_list.csv")
-#'   # data correction
-#'   china_cities <- dplyr::mutate(china_cities,
-#'                                 Province_EN = dplyr::case_when(
-#'                                   Province_EN == "anhui" ~ "Anhui",
-#'                                   Province_EN == "guizhou" ~ "Guizhou",
-#'                                   Province_EN == "hubei" ~ "Hubei",
-#'                                   Province_EN == "xinjiang" ~ "Xinjiang",
-#'                                   TRUE ~ Province_EN
-#'                                 ))
-#'   cities <-  china_cities$City_Admaster[
-#'     match(province_cities_ncov$cityName, china_cities$City)]
-#'   province_cities_ncov <-
-#'     province_cities_ncov[match(map$name, cities), ]
-#'
-#'   province_cities_ncov
-#'
-#' }
+# sort province data according to city names of map
+# sort_province_ncov_map <- function(province_cities_ncov, map) {
+#   china_cities <- readr::read_csv("data-raw/china_city_list.csv")
+#   # data correction
+#   china_cities <- dplyr::mutate(china_cities,
+#                                 Province_EN = dplyr::case_when(
+#                                   Province_EN == "anhui" ~ "Anhui",
+#                                   Province_EN == "guizhou" ~ "Guizhou",
+#                                   Province_EN == "hubei" ~ "Hubei",
+#                                   Province_EN == "xinjiang" ~ "Xinjiang",
+#                                   TRUE ~ Province_EN
+#                                 ))
+#   cities <-  china_cities$City_Admaster[
+#     match(province_cities_ncov$cityName, china_cities$City)]
+#  province_cities_ncov <- province_cities_ncov[match(map$name, cities), ]
+#
+#   province_cities_ncov
+#
+# }
 
-# Title css style
-# https://stackoverflow.com/questions/49072510/r-add-title-to-leaflet-map
+#' Title css style
+#' @references https://stackoverflow.com/questions/49072510/r-add-title-to-leaflet-map
+#' @noRd
 tag.map.title <- htmltools::tags$style(htmltools::HTML("
     .leaflet-control.map-title {
       background: rgba(255,255,255,0.75);
