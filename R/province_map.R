@@ -1,4 +1,4 @@
-#' Plot province maps for nCoV
+#' Plot maps for nCoV
 #'
 #' @param ncov ncov the dataset obtained by \code{\link[ncovr]{get_ncov}}
 #' @param province which province to plot

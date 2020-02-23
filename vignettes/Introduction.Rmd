@@ -100,10 +100,13 @@ plot_province_map2(ncov, "广东省", bins = c(0, 10, 100, 200))
 直接画所有省份图，台湾,香港,澳门数据没有细分，不需要画。
  
 ```{r all-province}
-# 没有台湾,香港,澳门等三地数据
-provinces <- leafletCN::regionNames("china") %>% 
-  setdiff(c("台湾省", "香港特别行政区", "澳门特别行政区"))
-
+# 没有台湾,香港,澳门,南海等地数据
+provinces <- setdiff(
+  mapNames$name,
+  c("台湾省", "香港特别行政区", 
+    "澳门特别行政区", "南海诸岛", "中国"
+  )
+)
 
 htmltools::tagList(purrr::map(provinces, 
   ~ plot_province_map(ncov, .x, bins = c(0, 10, 100, 500, 1000, 10000))))
@@ -117,5 +120,15 @@ htmltools::tagList(purrr::map(provinces,
 plot_province_map(ncov, "上海市", bins = c(0, 5, 10, 20, 60))
 ```
 
+## 国内整体疫情图
 
+**2020年2月23日增加**
+
+之前china map缺少南海诸岛数据，后来找到了包括南海诸岛的中国地图数据,然后
+根据`ncovr::plot_map()`简单写了个`plot_china_map()`用于画国内整体疫情图。
+
+```{r china-map}
+# 国内疫情整体图, 地图中包含南海诸岛
+plot_china_map(ncov, legend_position = "bottomleft")
+```
 

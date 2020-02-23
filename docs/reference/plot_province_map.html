@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot province maps for nCoV — plot_province_map • ncovmap</title>
+<title>China ncov map — plot_china_map • ncovmap</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,9 @@
 
 
 
-<meta property="og:title" content="Plot province maps for nCoV — plot_province_map" />
-<meta property="og:description" content="Plot province maps for nCoV" />
+<meta property="og:title" content="China ncov map — plot_china_map" />
+<meta property="og:description" content="China ncov map
+Plot maps for nCoV" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,16 +113,27 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot province maps for nCoV</h1>
+    <h1>China ncov map</h1>
     
     <div class="hidden name"><code>plot_province_map.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plot province maps for nCoV</p>
+    <p>China ncov map</p>
+<p>Plot maps for nCoV</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plot_province_map</span>(
+    <pre class="usage"><span class='fu'>plot_china_map</span>(
+  <span class='no'>ncov</span>,
+  <span class='kw'>key</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"confirmedCount"</span>, <span class='st'>"suspectedCount"</span>, <span class='st'>"curedCount"</span>, <span class='st'>"deadCount"</span>),
+  <span class='kw'>filter</span> <span class='kw'>=</span> <span class='st'>"unkown"</span>,
+  <span class='kw'>bins</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>10</span>, <span class='fl'>100</span>, <span class='fl'>500</span>, <span class='fl'>1000</span>, <span class='fl'>10000</span>),
+  <span class='kw'>legend_title</span> <span class='kw'>=</span> <span class='st'>"Confirmed"</span>,
+  <span class='kw'>legend_position</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"bottomright"</span>, <span class='st'>"topright"</span>, <span class='st'>"bottomleft"</span>, <span class='st'>"topleft"</span>),
+  <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"Reds"</span>
+)
+
+<span class='fu'>plot_province_map</span>(
   <span class='no'>ncov</span>,
   <span class='no'>province</span>,
   <span class='kw'>key</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"confirmedCount"</span>, <span class='st'>"suspectedCount"</span>, <span class='st'>"curedCount"</span>, <span class='st'>"deadCount"</span>),
@@ -142,7 +154,7 @@
   <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"Reds"</span>,
   <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"cat"</span>, <span class='st'>"log"</span>),
   <span class='kw'>bins</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>10</span>, <span class='fl'>100</span>, <span class='fl'>1000</span>),
-  <span class='kw'>tile_type</span> <span class='kw'>=</span> <span class='kw pkg'>leaflet</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/leaflet/man/map-layers.html'>addPolygons</a></span>,
+  <span class='kw'>tile_type</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>map_title</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>province</span>, <span class='st'>"nCoV"</span>)
 )</pre>
 
@@ -154,32 +166,32 @@
       <td><p>ncov the dataset obtained by <code>get_ncov</code></p></td>
     </tr>
     <tr>
-      <th>province</th>
-      <td><p>which province to plot</p></td>
-    </tr>
-    <tr>
       <th>key</th>
       <td><p>the feature to plot</p></td>
     </tr>
     <tr>
-      <th>legend_position</th>
-      <td><p>legend position</p></td>
+      <th>bins</th>
+      <td><p>a numberic vector to cut the value to format the value to</p></td>
     </tr>
     <tr>
       <th>legend_title</th>
       <td><p>legend title</p></td>
     </tr>
     <tr>
+      <th>legend_position</th>
+      <td><p>legend position</p></td>
+    </tr>
+    <tr>
       <th>color</th>
       <td><p>color palette</p></td>
     </tr>
     <tr>
-      <th>scale</th>
-      <td><p>category or factor</p></td>
+      <th>province</th>
+      <td><p>which province to plot</p></td>
     </tr>
     <tr>
-      <th>bins</th>
-      <td><p>a numberic vector to cut the value to format the value to</p></td>
+      <th>scale</th>
+      <td><p>category or factor</p></td>
     </tr>
     <tr>
       <th>map_title</th>
@@ -189,7 +201,7 @@ category, only worked while <code>scale</code> is "cat"</p></td>
     <tr>
       <th>tile_type</th>
       <td><p>function to define tile like amap or
-<code><a href='https://rdrr.io/pkg/leaflet/man/map-layers.html'>addTiles</a></code></p></td>
+<code><a href='https://rdrr.io/pkg/leaflet/man/map-layers.html'>addTiles</a></code>, default NULL</p></td>
     </tr>
     </table>
 
