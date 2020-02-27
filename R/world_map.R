@@ -1,3 +1,4 @@
+#' @export
 plot_world_map <- function(x,
                            key = c("confirmedCount", "suspectedCount", "curedCount", "deadCount"),
                            bins = c(0, 10, 100, 500, 1000, 10000),
@@ -19,7 +20,11 @@ plot_world_map <- function(x,
   )
   world <- world[-221, ]
 
-  countries_en_zh <- readr::read_csv("inst/counties_en_zh.csv")
+  countries_en_zh <- system.file(
+    "counties_en_zh.csv",
+    package = "ncovmap"
+  )
+  countries_en_zh <- readr::read_csv(countries_en_zh)
   world <- merge(world, countries_en_zh)
 
   # correct countries names according to world map
@@ -87,8 +92,9 @@ plot_world_map <- function(x,
 
 }
 
-# only area data
-get_word_ncov <- function() {
+
+#' @export
+get_world_ncov <- function() {
   base_url <- "http://lab.isaaclin.cn/nCoV/api/"
   ncov <- jsonlite::fromJSON(url(paste0(base_url, "area")))
 

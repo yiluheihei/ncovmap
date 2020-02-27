@@ -73,7 +73,7 @@ ncov数据中有个别城市名字是用缩写，比如湖北省的如"恩施州
 if (!require(devtools)) install.packages("devtools")
 if (!require(ncovmap)) devtools::install_github("yiluheihei/ncovmap")
 library(ncovmap)
-ncov <- ncovr::get_ncov()
+ncov <- get_ncov()
 ```
 
 `plot_province_map()`画图
@@ -130,5 +130,15 @@ plot_province_map(ncov, "上海市", bins = c(0, 5, 10, 20, 60))
 ```{r china-map}
 # 国内疫情整体图, 地图中包含南海诸岛
 plot_china_map(ncov, legend_position = "bottomleft")
+```
+
+## 世界疫情图
+
+**2020年2月27日增加**
+
+```{r world-map}
+world_ncov <- get_world_ncov()
+
+plot_world_map(world_ncov, legend_position = "bottomleft")
 ```
 

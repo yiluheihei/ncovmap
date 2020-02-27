@@ -77,7 +77,7 @@ plot_china_map <- function(ncov,
 # 南海诸岛为0
 add_nanhai <- function(ncov) {
   nanhai_ncov <- data.frame(
-    "南海诸岛", "南海诸岛",
+    "南海诸岛", "南海诸岛", "Nanhai",
     0, 0, 0, 0, 0,
     stringsAsFactors = FALSE
   )
