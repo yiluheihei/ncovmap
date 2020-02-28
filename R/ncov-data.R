@@ -16,7 +16,6 @@ get_ncov <- function() {
 }
 
 #' Show ncov
-#' @method [ ncov
 #' @export
 print.ncov <- function(x) {
   cat("COVID 2019 data\n")
@@ -28,9 +27,8 @@ print.ncov <- function(x) {
 #' Subset world, china, province, and other countries ncov data
 #'
 #' @param x ncov data, return from `get_ncov()`
-#' @param i word,
+#' @param i word
 #'
-#' @method [ ncov
 #' @export
 `[.ncov` <- function(x, i, j, latest = TRUE) {
   if (length(i) == 1) {

@@ -52,7 +52,7 @@ plot_world_map(
 )
 }
 \arguments{
-\item{ncov}{ncov the dataset obtained by \code{\link[ncovr]{get_ncov}}}
+\item{ncov}{ncov data}
 
 \item{key}{the feature to plot}
 

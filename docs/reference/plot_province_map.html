@@ -37,7 +37,8 @@
 
 <meta property="og:title" content="China ncov map — plot_china_map" />
 <meta property="og:description" content="China ncov map
-Plot maps for nCoV" />
+Plot maps for nCoV
+Plot world ncov map" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -121,6 +122,7 @@ Plot maps for nCoV" />
     <div class="ref-description">
     <p>China ncov map</p>
 <p>Plot maps for nCoV</p>
+<p>Plot world ncov map</p>
     </div>
 
     <pre class="usage"><span class='fu'>plot_china_map</span>(
@@ -156,6 +158,15 @@ Plot maps for nCoV" />
   <span class='kw'>bins</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>10</span>, <span class='fl'>100</span>, <span class='fl'>1000</span>),
   <span class='kw'>tile_type</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>map_title</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>province</span>, <span class='st'>"nCoV"</span>)
+)
+
+<span class='fu'>plot_world_map</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>key</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"confirmedCount"</span>, <span class='st'>"suspectedCount"</span>, <span class='st'>"curedCount"</span>, <span class='st'>"deadCount"</span>),
+  <span class='kw'>bins</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>10</span>, <span class='fl'>100</span>, <span class='fl'>500</span>, <span class='fl'>1000</span>, <span class='fl'>10000</span>),
+  <span class='kw'>legend_title</span> <span class='kw'>=</span> <span class='st'>"Confirmed"</span>,
+  <span class='kw'>legend_position</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"bottomright"</span>, <span class='st'>"topright"</span>, <span class='st'>"bottomleft"</span>, <span class='st'>"topleft"</span>),
+  <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"Reds"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -163,7 +174,7 @@ Plot maps for nCoV" />
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>ncov</th>
-      <td><p>ncov the dataset obtained by <code>get_ncov</code></p></td>
+      <td><p>ncov data</p></td>
     </tr>
     <tr>
       <th>key</th>

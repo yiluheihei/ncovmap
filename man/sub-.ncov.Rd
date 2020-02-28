@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{ncov data, return from `get_ncov()`}
 
-\item{i}{word,}
+\item{i}{word}
 }
 \description{
 Subset world, china, province, and other countries ncov data

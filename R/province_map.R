@@ -1,6 +1,6 @@
 #' Plot maps for nCoV
 #'
-#' @param ncov ncov the dataset obtained by \code{\link[ncovr]{get_ncov}}
+#' @param ncov ncov data
 #' @param province which province to plot
 #' @param key the feature to plot
 #' @param legend_title legend title
@@ -246,6 +246,7 @@ format_labels <- function(bins, sep = "~") {
   labels
 }
 
+#' Correct names of cities in ncov data
 #' Since the latest data was uesed for visualization, only correct the latest data
 #'
 #' @param ncov ncov data
@@ -254,8 +255,10 @@ format_labels <- function(bins, sep = "~") {
 correct_ncov_cities <- function(ncov, province) {
   # xianggang aomen and taiwan, no cities ncov data
   ref_names <- leafletCN::mapNames
-  no_cities <- match(c("Hong Kong", "Macau", "Taiwan"),
-    ref_names$name_en) %>%
+  no_cities <- match(
+    c("Hong Kong", "Macau", "Taiwan"),
+    ref_names$name_en
+  ) %>%
     ref_names[c("name", "label")][., ] %>%
     unlist()
   if (province %in% no_cities) {

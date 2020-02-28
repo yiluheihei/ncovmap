@@ -4,7 +4,7 @@
 \alias{print.ncov}
 \title{Show ncov}
 \usage{
-\method{[}{ncov}(x)
+\method{print}{ncov}(x)
 }
 \description{
 Show ncov

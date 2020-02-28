@@ -14,6 +14,14 @@ knitr::opts_chunk$set(
 
 ncov 疫情图，参考[ncovr](https://github.com/pzhaonet/ncovr), 具体使用详情见[vignette](https://yiluheihei.github.io/ncovmap/articles/Introduction.html). 暂放于此，后续可并入[ncovr](https://github.com/pzhaonet/ncovr)
 
+## 数据来源
+
+数据获取通过[DXY-COVID-19-Crawler](https://github.com/BlankerL/DXY-COVID-19-Crawler) 
+api 下载，调用`get_ncov()`即可获取。
+
+
+## 安装
+
 ```{r eval=FALSE}
 # 安装修改后的leafletCN
 devtools::install_github("yiluheihei/leafletCN")
@@ -27,22 +35,28 @@ if (!require(ncovmap)) remotes::install_github("yiluheihei/ncovmap")
 library(ncovmap)
 ```
 
-下载ncov数据
+## 下载ncov数据
 
 ```{r data, cache=TRUE}
 ncov <- get_ncov()
+ncov
 ```
 
-提取省市或国家数据
+## 提取省市或国家数据
 
 ```{r subset}
 # 中国数据
 china <- ncov['china']
+china
 # 省市数据
 hubei <- ncov['湖北省']
+hubei
 beijing <- ncov['北京市']
+beijing
+beijing$cities
 # 世界数据
 world <- ncov['world']
+world
 ```
 
 ## 国内总体疫情图

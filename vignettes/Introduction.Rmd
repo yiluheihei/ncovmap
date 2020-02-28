@@ -80,21 +80,24 @@ ncov <- get_ncov()
 
 ```{r map_hubei}
 # 例数为0的城市以白色突出显示
-plot_province_map(ncov, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000))
+hubei <- ncov["湖北省"]
+plot_province_map(hubei, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000)
+)
 ```
 
 ```{r map_guangdong}
-plot_province_map(ncov, "广东省", bins = c(0, 10, 100, 200))
+guangdong <- ncov["广东省"]
+plot_province_map(guangdong, "广东省", bins = c(0, 10, 100, 200))
 ```
 
 `plot_province_map2()`画图
 
 ```{r map2_hubei}
-plot_province_map2(ncov, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000))
+plot_province_map2(hubei, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000))
 ```
 
 ```{r map2_guangdong}
-plot_province_map2(ncov, "广东省", bins = c(0, 10, 100, 200))
+plot_province_map2(guangdong, "广东省", bins = c(0, 10, 100, 200))
 ```
 
 直接画所有省份图，台湾,香港,澳门数据没有细分，不需要画。
@@ -109,7 +112,7 @@ provinces <- setdiff(
 )
 
 htmltools::tagList(purrr::map(provinces, 
-  ~ plot_province_map(ncov, .x, bins = c(0, 10, 100, 500, 1000, 10000))))
+  ~ plot_province_map(ncov[.x], .x, bins = c(0, 10, 100, 500, 1000, 10000))))
 ```
 
 虽然简单几行代码就可以把所有省份疫情图画出来，但是实际上根据各省份例数不同，个
@@ -117,7 +120,7 @@ htmltools::tagList(purrr::map(provinces,
 疫情都在100以内，可以把bins设置小一些。
 
 ```{r shanghai-bin}
-plot_province_map(ncov, "上海市", bins = c(0, 5, 10, 20, 60))
+plot_province_map(ncov["上海市"], "上海市", bins = c(0, 5, 10, 20, 60))
 ```
 
 ## 国内整体疫情图
@@ -128,8 +131,9 @@ plot_province_map(ncov, "上海市", bins = c(0, 5, 10, 20, 60))
 根据`ncovr::plot_map()`简单写了个`plot_china_map()`用于画国内整体疫情图。
 
 ```{r china-map}
-# 国内疫情整体图, 地图中包含南海诸岛
-plot_china_map(ncov, legend_position = "bottomleft")
+# 国内疫情整体图, 地图中包含南海诸岛i
+china <- ncov["china"]
+plot_china_map(china, legend_position = "bottomleft")
 ```
 
 ## 世界疫情图
@@ -137,8 +141,7 @@ plot_china_map(ncov, legend_position = "bottomleft")
 **2020年2月27日增加**
 
 ```{r world-map}
-world_ncov <- get_world_ncov()
-
-plot_world_map(world_ncov, legend_position = "bottomleft")
+world <- ncov["world"]
+plot_world_map(world, legend_position = "bottomleft")
 ```
 
