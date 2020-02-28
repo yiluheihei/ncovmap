@@ -13,12 +13,7 @@ plot_china_map <- function(ncov,
   key <- match.arg(key)
   legend_position <- match.arg(legend_position)
 
-  ncov <- ncov$area %>%
-    dplyr::filter(provinceName %in% c(leafletCN::mapNames$label, leafletCN::mapNames$name)) %>%
-    dplyr::select(provinceShortName, provinceName:deadCount) %>%
-    dplyr::group_by(provinceName) %>%
-    dplyr::slice(1) %>%
-    add_nanhai()
+  ncov <- add_nanhai(ncov)
 
   ncov$key <- ncov[[key]]
   bins <- setdiff(bins, c(0, 1)) %>%
@@ -77,12 +72,13 @@ plot_china_map <- function(ncov,
 # 南海诸岛为0
 add_nanhai <- function(ncov) {
   nanhai_ncov <- data.frame(
-    "南海诸岛", "南海诸岛", "Nanhai",
-    0, 0, 0, 0, 0,
+    provinceName = "南海诸岛",
+    provinceShortName = "南海诸岛",
+    provinceEnglishName = "Nanhai",
     stringsAsFactors = FALSE
   )
-  names(nanhai_ncov) <- names(ncov)
-  ncov <- dplyr::bind_rows(ncov, nanhai_ncov)
+  ncov <- dplyr::bind_rows(ncov, nanhai_ncov) %>%
+    dplyr::mutate_if(is.numeric, ~ ifelse(is.na(.x), 0, .x))
 
   ncov
 }

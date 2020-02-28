@@ -54,6 +54,7 @@ print.ncov <- function(x) {
 }
 
 #' Subset china ncov
+#' @noRd
 subset_china_ncov <- function(ncov, latest = TRUE) {
   china_ncov <- dplyr::filter(
     ncov$area,
@@ -62,13 +63,15 @@ subset_china_ncov <- function(ncov, latest = TRUE) {
 
   if (latest) {
     china_ncov <- dplyr::group_by(china_ncov, provinceName) %>%
-      dplyr::group_modify(~ head(.x, 1L))
+      dplyr::group_modify(~ head(.x, 1L)) %>%
+      dplyr::ungroup()
   }
 
   china_ncov
 }
 
 #' Subset province ncov, as well as foreign country
+#' @noRd
 subset_province_ncov <- function(ncov, i, latest = TRUE) {
   province_ncov <- dplyr::filter(
     ncov$area,
@@ -77,13 +80,15 @@ subset_province_ncov <- function(ncov, i, latest = TRUE) {
 
   if (latest) {
     province_ncov <- dplyr::group_by(province_ncov, provinceName) %>%
-      dplyr::group_modify(~ head(.x, 1L))
+      dplyr::group_modify(~ head(.x, 1L)) %>%
+      dplyr::ungroup()
   }
 
   province_ncov
 }
 
 #' Subset world ncov
+#' @noRd
 subset_world_ncov <- function(ncov, latest = TRUE) {
   # ncov in other countries except china
   other_ncov <- dplyr::filter(
@@ -110,7 +115,8 @@ subset_world_ncov <- function(ncov, latest = TRUE) {
 
   if (latest) {
     world_ncov <- dplyr::group_by(world_ncov, countryEnglishName) %>%
-      dplyr::group_modify(~ head(.x, 1L))
+      dplyr::group_modify(~ head(.x, 1L)) %>%
+      dplyr::ungroup()
   }
 
   world_ncov

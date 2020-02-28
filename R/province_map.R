@@ -60,26 +60,34 @@ plot_province_map <- function(ncov,
       sort(decreasing = TRUE)
 
     res <- leaflet::leaflet(province_map) %>%
-      leaflet::addPolygons(stroke = TRUE,
-                           smoothFactor = 1,
-                           fillOpacity = 0.7,
-                           weight = 1,
-                           color = map_colors,
-                           popup =  paste(
-                             province_cities_ncov$cityName,
-                             province_cities_ncov$key)
+      leaflet::addPolygons(
+        stroke = TRUE,
+        smoothFactor = 1,
+        fillOpacity = 0.7,
+        weight = 1,
+        color = map_colors,
+        popup =  paste(
+          province_cities_ncov$cityName,
+          province_cities_ncov$key)
       ) %>%
-      leaflet::addLegend(legend_position,
-                         colors = legend_colors,
-                         labels = names(legend_colors),
-                         labFormat = leaflet::labelFormat(prefix = ""),
-                         opacity = 1)
+      leaflet::addLegend(
+        legend_position,
+        colors = legend_colors,
+        labels = names(legend_colors),
+        labFormat = leaflet::labelFormat(prefix = ""),
+        opacity = 1
+      )
   }
   if (scale == "log") {
-    province_cities_ncov <- dplyr::mutate(province_cities_ncov,
-                                          key_log = ifelse(key == 0, 0, log10(key)))
-    province_map <- leafletCN::leafletGeo(province, province_cities_ncov,
-                                          valuevar = ~key_log)
+    province_cities_ncov <- dplyr::mutate(
+      province_cities_ncov,
+      key_log = ifelse(key == 0, 0, log10(key))
+    )
+    province_map <- leafletCN::leafletGeo(
+      province,
+      province_cities_ncov,
+      valuevar = ~key_log
+    )
 
     # sort the `province_cities_ncov` according to city names in `province_map`
     # province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
@@ -88,14 +96,15 @@ plot_province_map <- function(ncov,
     # pal <- leaflet::colorBin(color, province_map$value)
 
     res <- leaflet::leaflet(province_map) %>%
-      leaflet::addPolygons(stroke = TRUE,
-                           smoothFactor = 1,
-                           fillOpacity = 0.7,
-                           weight = 1,
-                           color = ~ pal(value),
-                           popup =  paste(
-                             province_cities_ncov$cityName,
-                             province_cities_ncov$key)
+      leaflet::addPolygons(
+        stroke = TRUE,
+        smoothFactor = 1,
+        fillOpacity = 0.7,
+        weight = 1,
+        color = ~ pal(value),
+        popup =  paste(
+          province_cities_ncov$cityName,
+          province_cities_ncov$key)
       ) %>%
       leaflet::addLegend(
         legend_position,
@@ -110,11 +119,14 @@ plot_province_map <- function(ncov,
   }
 
   title <- htmltools::tags$div(
-    tag.map.title, htmltools::HTML(map_title)
+    tag.map.title,
+    htmltools::HTML(map_title)
   )
 
-  res %>% leaflet::addControl(title, position = "topleft",
-                              className = "map-title")
+  res %>% leaflet::addControl(
+    title, position = "topleft",
+    className = "map-title"
+  )
 }
 
 
@@ -203,11 +215,15 @@ plot_province_map2 <- function(ncov,
   }
 
   title <- htmltools::tags$div(
-    tag.map.title, htmltools::HTML(map_title)
+    tag.map.title,
+    htmltools::HTML(map_title)
   )
 
-  res %>% leaflet::addControl(title, position = "topleft",
-                              className="map-title")
+  res %>% leaflet::addControl(
+    title,
+    position = "topleft",
+    className="map-title"
+  )
 }
 
 #' Format legend labels
@@ -245,11 +261,14 @@ correct_ncov_cities <- function(ncov, province) {
   if (province %in% no_cities) {
     stop("ncov does not contian data on Hong Kang, Macau, or Taiwan")
   } else {
-    p_ncov <- dplyr::filter(ncov$area, provinceName == province)$cities[[1]]
+    p_ncov <- ncov$cities[[1]]
   }
 
-  res <- inner_join(p_ncov, city_reference,
-    by = c("cityName" = "origin")) %>%
+  res <- inner_join(
+    p_ncov,
+    city_reference,
+    by = c("cityName" = "origin")
+  ) %>%
     mutate(cityName = corrected) %>%
     select(cityName:deadCount)
 
@@ -257,7 +276,7 @@ correct_ncov_cities <- function(ncov, province) {
 }
 
 
-#' Extract and preprocess nconv data of provinces
+#' Add cities in which the count of ncov is 0
 #' @noRd
 tidy_province_ncov <- function(ncov, province) {
   province_cities_ncov <- correct_ncov_cities(ncov, province)
@@ -267,9 +286,12 @@ tidy_province_ncov <- function(ncov, province) {
 
   # bind the cities which has no ncov
   if (length(city_zero)) {
-    city_zero <- data.frame(city_zero, 0, 0, 0, 0, 0)
-    names(city_zero) <- names(province_cities_ncov)
-    province_cities_ncov <- dplyr::bind_rows(province_cities_ncov, city_zero)
+    city_zero <- data.frame(cityName = city_zero, stringsAsFactors = FALSE)
+    province_cities_ncov <- dplyr::bind_rows(
+      province_cities_ncov,
+      city_zero
+    ) %>%
+      dplyr::mutate_if(is.numeric, ~ ifelse(is.na(.x), 0, .x))
   }
   # order the data acccording to regionNames
   province_cities_ncov <- province_cities_ncov[

@@ -1,4 +1,6 @@
+#' Plot world ncov map
 #' @export
+#' @rdname plot_province_map
 plot_world_map <- function(x,
                            key = c("confirmedCount", "suspectedCount", "curedCount", "deadCount"),
                            bins = c(0, 10, 100, 500, 1000, 10000),
@@ -90,30 +92,4 @@ plot_world_map <- function(x,
       opacity = 1
     )
 
-}
-
-
-#' @export
-get_world_ncov <- function() {
-  base_url <- "http://lab.isaaclin.cn/nCoV/api/"
-  ncov <- jsonlite::fromJSON(url(paste0(base_url, "area")))
-
-  # add the country en name
-  other_country_ncov <- dplyr::filter(ncov$results, countryName != "中国") %>%
-    dplyr::select(starts_with("country"), currentConfirmedCount:deadCount) %>%
-    dplyr::mutate(
-      countryEnglishName = dplyr::case_when(
-        countryName == "克罗地亚" ~ "Croatia",
-        countryName == "阿联酋" ~ "United Arab Emirates",
-        TRUE ~ countryEnglishName
-      )
-    )
-
-  china_ncov <- jsonlite::fromJSON(url(paste0(base_url, "overall"))) %>%
-    .$results %>%
-    dplyr::select(currentConfirmedCount:deadCount) %>%
-    dplyr::mutate(countryName = "中国", countryEnglishName = "China")
-
-  world_ncov <- dplyr::bind_rows(china_ncov, other_country_ncov)
-  world_ncov
 }
