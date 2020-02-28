@@ -16,6 +16,9 @@ r_packages:
   - pkgdown
   - devtools
 
+r_github_packages:
+  - yiluheihei/leafletCN
+
 before_install:
   - git config --global user.email "yiluheihei@gmail.com"
   - git config --global user.name "yiluheihei"
