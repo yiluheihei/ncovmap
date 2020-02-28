@@ -21,11 +21,9 @@ before_install:
   - git config --global user.name "yiluheihei"
 
 script:
-  - Rscript -e "devtools::check()"
   - Rscript -e "pkgdown::build_site()"
 
 after_success:
-  after_success:
   - git add --all *
   - git commit -m "Update the pkg site" || true
   - git push -q https://${GITHUB_PAT}@github.com/yiluheihei/ncovmap.git HEAD:master
