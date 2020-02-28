@@ -1,6 +1,12 @@
 language: r
 
-cache: packages
+cache:
+  packages: true
+
+addons:
+  apt:
+    packages:
+      - libudunits2-dev
 
 r_packages:
   - pkgdown
