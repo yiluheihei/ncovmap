@@ -24,7 +24,7 @@ before_install:
   - git config --global user.name "yiluheihei"
 
 script:
-  - Rscript -e "pkgdown::build_site()"
+  - travis_wait Rscript -e "pkgdown::build_site()"
 
 after_success:
   - git add --all *
