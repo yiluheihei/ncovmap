@@ -27,11 +27,28 @@ if (!require(ncovmap)) remotes::install_github("yiluheihei/ncovmap")
 library(ncovmap)
 ```
 
+下载ncov数据
+
+```{r data, cache=TRUE}
+ncov <- get_ncov()
+```
+
+提取省市或国家数据
+
+```{r subset}
+# 中国数据
+china <- ncov['china']
+# 省市数据
+hubei <- ncov['湖北省']
+beijing <- ncov['北京市']
+# 世界数据
+world <- ncov['world']
+```
+
 ## 国内总体疫情图
 
 ```{r china-map}
-ncov <- get_ncov()
-plot_china_map(ncov, legend_position = "bottomleft")
+plot_china_map(china, legend_position = "bottomleft")
 ```
 
 ## 省份疫情图
@@ -40,7 +57,7 @@ plot_china_map(ncov, legend_position = "bottomleft")
 
 ```{r hubei-map}
 plot_province_map(
-  ncov, 
+  hubei, 
   "湖北省", 
   bins = c(0, 100, 200, 500, 1000, 10000)
 )
@@ -50,7 +67,7 @@ plot_province_map(
 
 ```{r beijing-map}
 plot_province_map(
-  ncov,
+  beijing,
   "北京市", 
   bins = c(0, 10, 50, 100)
 )
@@ -59,6 +76,5 @@ plot_province_map(
 ## 世界疫情图
 
 ```{r world-map}
-world_ncov <- get_world_ncov()
-plot_world_map(world_ncov, legend_position = "bottomleft")
+plot_world_map(world, legend_position = "bottomleft")
 ```

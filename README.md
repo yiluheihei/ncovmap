@@ -25,11 +25,28 @@ if (!require(ncovmap)) remotes::install_github("yiluheihei/ncovmap")
 library(ncovmap)
 ```
 
-## 国内总体疫情图
+下载ncov数据
 
 ``` r
 ncov <- get_ncov()
-plot_china_map(ncov, legend_position = "bottomleft")
+```
+
+提取省市或国家数据
+
+``` r
+# 中国数据
+china <- ncov['china']
+# 省市数据
+hubei <- ncov['湖北省']
+beijing <- ncov['北京市']
+# 世界数据
+world <- ncov['world']
+```
+
+## 国内总体疫情图
+
+``` r
+plot_china_map(china, legend_position = "bottomleft")
 ```
 
     ## Warning: Setting row names on a tibble is deprecated.
@@ -42,7 +59,7 @@ plot_china_map(ncov, legend_position = "bottomleft")
 
 ``` r
 plot_province_map(
-  ncov, 
+  hubei, 
   "湖北省", 
   bins = c(0, 100, 200, 500, 1000, 10000)
 )
@@ -58,17 +75,14 @@ plot_province_map(
 
 ``` r
 plot_province_map(
-  ncov,
+  beijing,
   "北京市", 
   bins = c(0, 10, 50, 100)
 )
 ```
 
     ## Warning: Setting row names on a tibble is deprecated.
-
-    ## Warning in bind_rows_(x, .id): binding character and factor vector, coercing
-    ## into character vector
-
+    
     ## Warning: Setting row names on a tibble is deprecated.
 
 ![](man/figures/beijing-map-1.png)<!-- -->
@@ -76,8 +90,7 @@ plot_province_map(
 ## 世界疫情图
 
 ``` r
-world_ncov <- get_world_ncov()
-plot_world_map(world_ncov, legend_position = "bottomleft")
+plot_world_map(world, legend_position = "bottomleft")
 ```
 
 ![](man/figures/world-map-1.png)<!-- -->
