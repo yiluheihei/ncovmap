@@ -18,4 +18,4 @@ after_success:
   after_success:
   - git add --all *
   - git commit -m "Update the pkg site" || true
-  - git push -q https://${GITHUB_PAT}@github.com/pzhaonet/ncov.git HEAD:master
+  - git push -q https://${GITHUB_PAT}@github.com/yiluheihei/ncovmap.git HEAD:master
