@@ -6,7 +6,11 @@ cache:
 addons:
   apt:
     packages:
+      # sf
       - libudunits2-dev
+      - libgdal-dev
+      - libgeos-dev
+      - libproj-dev
 
 r_packages:
   - pkgdown
