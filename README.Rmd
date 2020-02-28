@@ -37,7 +37,7 @@ library(ncovmap)
 
 ## 下载ncov数据
 
-```{r data, cache=TRUE}
+```{r data}
 ncov <- get_ncov()
 ncov
 ```
