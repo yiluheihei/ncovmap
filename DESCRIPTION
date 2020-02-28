@@ -14,7 +14,6 @@ Imports:
     dplyr,
     magrittr,
     htmltools,
-    ncovr,
     leaflet,
     rnaturalearth,
     sf,
