@@ -1,0 +1,64 @@
+---
+title: "ncov 2019"
+date: "`r format(Sys.time(), '%Y年%m月%d日')`"
+output: 
+  - github_document
+---
+
+```{r set}
+knitr::opts_chunk$set(
+  fig.path = "man/figures/",
+  message = FALSE
+)
+```
+
+ncov 疫情图，参考[ncovr](https://github.com/pzhaonet/ncovr), 具体使用详情见[vignette](https://yiluheihei.github.io/ncovmap/articles/Introduction.html). 暂放于此，后续可并入[ncovr](https://github.com/pzhaonet/ncovr)
+
+```{r eval=FALSE}
+# 安装修改后的leafletCN
+devtools::install_github("yiluheihei/leafletCN")
+```
+
+
+```{r install-ncovmap,message=FALSE}
+library(leafletCN)
+if (!require(remotes)) install.packages("remotes")
+if (!require(ncovmap)) remotes::install_github("yiluheihei/ncovmap")
+library(ncovmap)
+```
+
+## 国内总体疫情图
+
+```{r china-map}
+ncov <- get_ncov()
+plot_china_map(ncov, legend_position = "bottomleft")
+```
+
+## 省份疫情图
+
+湖北省
+
+```{r hubei-map}
+plot_province_map(
+  ncov, 
+  "湖北省", 
+  bins = c(0, 100, 200, 500, 1000, 10000)
+)
+```
+
+北京市
+
+```{r beijing-map}
+plot_province_map(
+  ncov,
+  "北京市", 
+  bins = c(0, 10, 50, 100)
+)
+```
+
+## 世界疫情图
+
+```{r world-map}
+world_ncov <- get_world_ncov()
+plot_world_map(world_ncov, legend_position = "bottomleft")
+```
