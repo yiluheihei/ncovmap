@@ -21,7 +21,8 @@ Imports:
     sf,
     readr,
     jsonlite,
-    leafletCN
+    leafletCN,
+    curl
 Depends: R (>= 2.10)
 Suggests: 
     knitr,
