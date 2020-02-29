@@ -40,9 +40,11 @@ knitr::include_graphics("old_leafletCN_ncov_map.png")
 新，并且我所用的地图数据也不是最新的数据，可能存在个别城市名字错误(目前还没发
 现任何错误)。
 
-```{r eval=FALSE}
+```{r leafletCN, message=FALSE}
 # 安装修改后的leafletCN
-devtools::install_github("yiluheihei/leafletCN")
+if (!require(leafletCN) || packageVersion("leafletCN") < "0.2.3") {
+  remotes::install_github("yiluheihei/leafletCN")
+}
 ```
 
 ```{r leafletCN-load}
@@ -71,8 +73,8 @@ ncov数据中有个别城市名字是用缩写，比如湖北省的如"恩施州
 读取数据，加载包
 
 ```{r data}
-if (!require(devtools)) install.packages("devtools")
-if (!require(ncovmap)) devtools::install_github("yiluheihei/ncovmap")
+if (!require(remotes)) install.packages("remotes")
+if (!require(ncovmap)) remotes::install_github("yiluheihei/ncovmap")
 library(ncovmap)
 ncov <- get_ncov()
 ```
