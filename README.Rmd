@@ -23,16 +23,13 @@ api 下载，调用`get_ncov()`即可获取。
 ## 安装
 
 ```{r eval=FALSE}
-# 安装修改后的leafletCN
-devtools::install_github("yiluheihei/leafletCN")
-```
-
-
-```{r install-ncovmap,message=FALSE}
-library(leafletCN)
 if (!require(remotes)) install.packages("remotes")
 if (!require(ncovmap)) remotes::install_github("yiluheihei/ncovmap")
+```
+
+```{r load-ncovmap,message=FALSE}
 library(ncovmap)
+library(leafletCN)
 ```
 
 ## 下载ncov数据

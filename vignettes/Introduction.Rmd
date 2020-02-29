@@ -16,11 +16,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(magrittr)
-```
-
-
 用leafletCN画省份疫情图存在两个问题，一是leafletCN中地图数据跟ncov数据中城市的
 名字不一致，可能是一些城市已经改名，如襄樊已经改成襄阳，北京市早已把撤县设区，
 而现有数据中还是县；或者是ncov中采用了地名的缩写。二是需要把除该省之外的区域去
@@ -40,15 +35,13 @@ knitr::include_graphics("old_leafletCN_ncov_map.png")
 新，并且我所用的地图数据也不是最新的数据，可能存在个别城市名字错误(目前还没发
 现任何错误)。
 
-```{r leafletCN, message=FALSE}
+```{r install, message=FALSE, eval=FALSE}
 # 安装修改后的leafletCN
+if (!require(remotes)) install.packages("remotes")
 if (!require(leafletCN) || packageVersion("leafletCN") < "0.2.3") {
   remotes::install_github("yiluheihei/leafletCN")
 }
-```
-
-```{r leafletCN-load}
-library(leafletCN)
+if (!require(ncovmap)) remotes::install_github("yiluheihei/ncovmap")
 ```
 
 ## 画省份的疫情图
@@ -73,9 +66,9 @@ ncov数据中有个别城市名字是用缩写，比如湖北省的如"恩施州
 读取数据，加载包
 
 ```{r data}
-if (!require(remotes)) install.packages("remotes")
-if (!require(ncovmap)) remotes::install_github("yiluheihei/ncovmap")
 library(ncovmap)
+library(leafletCN)
+library(magrittr)
 ncov <- get_ncov()
 ```
 
