@@ -11,10 +11,11 @@ addons:
       - libgdal-dev
       - libgeos-dev
       - libproj-dev
+      - libcurl4-openssl-dev
 
 r_packages:
   - pkgdown
-  - devtools
+  - curl
 
 r_github_packages:
   - yiluheihei/leafletCN
