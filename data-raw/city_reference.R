@@ -15,7 +15,7 @@ china_cities <- dplyr::mutate(china_cities,
                                 Province_EN == "xinjiang" ~ "Xinjiang",
                                 TRUE ~ Province_EN
                               ))
-readr::write_csv(china_cities, "data-raw/china_city_list.csv", )
+readr::write_csv(china_cities, "inst/china_city_list.csv", )
 # usethis::use_data(china_cities, internal = TRUE, overwrite = TRUE)
 
 

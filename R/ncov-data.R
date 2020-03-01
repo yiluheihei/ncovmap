@@ -2,24 +2,112 @@
 #'
 #' @export
 get_ncov <- function() {
-  port <-  c('area', 'overall')
   api <- "https://lab.isaaclin.cn/nCoV/api/"
-  ncov <- purrr::map(
-    port,
-    ~ jsonlite::fromJSON(paste0(api, .x, "?latest=0"))$results
-  )
-  names(ncov) <- port
-  ncov$area$updateTime <- conv_time(ncov$area$updateTime)
-  ncov$overall$updateTime <- conv_time(ncov$overall$updateTime)
 
-  structure(ncov, class = "ncov")
+  ncov <- jsonlite::fromJSON(paste0(api, "area", "?latest=0"))$results
+  ncov$updateTime <- conv_time(ncov$updateTime)
+  ncov <- purrr::map_dfr(
+    1:nrow(ncov),
+    ~ unnest_province_ncov(ncov[.x, ])
+  )
+
+  overall <- jsonlite::fromJSON(paste0(api, "overall"))$results
+  overall$updateTime <- conv_time(overall$updateTime)
+
+  structure(
+    ncov,
+    overall = overall,
+    class = c("ncov", "data.frame"),
+    type = "All",
+    from = api
+  )
+}
+
+# unnest the cities data
+unnest_province_ncov <- function(x) {
+  p_ncov <- dplyr::select(
+    x,
+    dplyr::starts_with(c("province", "country", "continent")),
+    -countryShortCode,
+    cityName,
+    cities,
+    currentConfirmedCount:deadCount,
+    updateTime
+  )
+
+  # no cities data, such as beijing, foregin countries
+  if (length(p_ncov$cities[[1]]) == 0) {
+    p_ncov$cities <- NULL
+    p_ncov$cityEnglishName <- NA
+    res <- p_ncov
+  } else {
+    c_ncov <- p_ncov$cities[[1]]
+    # data may be incomplete, not contain locationID
+    if ("locationId" %in% names(c_ncov)) {
+      c_ncov$locationId <- NULL
+    }
+    # missing some vars
+    c_var <- names(c_ncov)
+    if (! "cityName" %in% c_var) {
+      stop("City name must be listed in the cities ncov")
+    }
+    count_names <- c(
+      "currentConfirmedCount", "confirmedCount",
+      "suspectedCount", "curedCount", "deadCount"
+    )
+    lack_var <- setdiff(count_names, c_var)
+    if (length(lack_var) > 0) {
+      for (v in lack_var) {
+        c_ncov[[v]] <- NA
+      }
+    }
+    if (!"cityEnglishName" %in% names(c_ncov)) {
+      city_name_map <- system.file(
+        "china_city_list.csv",
+        package = "ncovmap") %>%
+        readr::read_csv()
+
+      index <-
+        match(c_ncov$cityName, city_name_map$City, nomatch = 0) +
+        match(c_ncov$cityName, city_name_map$City_Admaster, nomatch = 0)
+
+      c_ncov$cityEnglishName <- purrr::map_chr(
+        index,
+        function(x) ifelse(x == 0, NA, city_name_map$City_EN[x])
+      )
+    }
+
+    p_ncov$cities <- NULL
+    p_var <- setdiff(
+      names(p_ncov),
+      names(c_ncov)
+    )
+
+    for (v in p_var) {
+      c_ncov[[v]] <- p_ncov[[v]]
+    }
+
+    res <- dplyr::bind_rows(p_ncov, c_ncov)
+  }
+
+  res
 }
 
 #' Show ncov
 #' @export
 print.ncov <- function(x) {
-  cat("COVID 2019 data\n")
-  cat("Updated at", as.character(x$overall$updateTime[1]))
+  type <- attr(x, "type")
+  cat(type, "COVID 2019 Data\n")
+
+  if (type == "All") {
+    overall <- attr(x, "overall")
+    update_time <- as.character(overall$updateTime[1])
+  } else {
+    update_time <- as.character(x$updateTime[1])
+  }
+
+  cat("Updated at", update_time, "\n")
+  cat("From", attr(x, "from"))
 }
 
 #' Subset ncov data
@@ -30,32 +118,41 @@ print.ncov <- function(x) {
 #' @param i word
 #'
 #' @export
-`[.ncov` <- function(x, i, j, latest = TRUE) {
+`[.ncov` <- function(x, i, j, latest = TRUE, drop = FALSE) {
   if (length(i) == 1) {
-    if (i %in% c("world", "World", "世界")) {
+    if (i %in% c("world", "World")) {
       res <- subset_world_ncov(x, latest = latest)
-    } else if (i %in% c("China", "中国", "china")) {
+      type <-  "World"
+    } else if (i %in% c("China", "china")) {
       res <- subset_china_ncov(x, latest)
+      type <- "China"
     } else {
       res <- subset_province_ncov(ncov, i, latest)
+      type <- res$provinceEnglishName[1]
     }
   } else {
     res <- purrr::map_df(
       i,
       ~ subset_province_ncov(ncov, .x, latest)
     )
+    type <- paste(unique(res$provinceEnglishName), collapse = ", ")
   }
 
-  res <- res[, j, drop = FALSE]
+  res <- res[, j, drop = drop]
 
-  res
+  structure(
+    res,
+    class = c("ncov", "data.frame"),
+    type = type,
+    from = attr(ncov, "from")
+  )
 }
 
 #' Subset china ncov
 #' @noRd
 subset_china_ncov <- function(ncov, latest = TRUE) {
   china_ncov <- dplyr::filter(
-    ncov$area,
+    ncov,
     countryEnglishName == "China"
   )
 
@@ -72,14 +169,17 @@ subset_china_ncov <- function(ncov, latest = TRUE) {
 #' @noRd
 subset_province_ncov <- function(ncov, i, latest = TRUE) {
   province_ncov <- dplyr::filter(
-    ncov$area,
-    provinceName == i | provinceShortName ==i | provinceEnglishName == i
+    ncov,
+    provinceName == i | provinceEnglishName == i | provinceShortName == i,
   )
 
+
   if (latest) {
-    province_ncov <- dplyr::group_by(province_ncov, provinceName) %>%
-      dplyr::group_modify(~ head(.x, 1L)) %>%
-      dplyr::ungroup()
+    province_ncov <- dplyr::filter(
+      province_ncov,
+      !is.na(cityName),
+      updateTime == max(province_ncov$updateTime)
+    )
   }
 
   province_ncov
@@ -90,13 +190,13 @@ subset_province_ncov <- function(ncov, i, latest = TRUE) {
 subset_world_ncov <- function(ncov, latest = TRUE) {
   # ncov in other countries except china
   other_ncov <- dplyr::filter(
-    ncov$area,
+    ncov,
     countryEnglishName != "China"
   ) %>%
-    dplyr::select(
-      starts_with("country"),
-      currentConfirmedCount:deadCount
-    ) %>%
+    # dplyr::select(
+    #   starts_with("country"),
+    #   currentConfirmedCount:deadCount
+    # ) %>%
     dplyr::mutate(
       countryEnglishName = dplyr::case_when(
         countryName == "克罗地亚" ~ "Croatia",
@@ -105,8 +205,8 @@ subset_world_ncov <- function(ncov, latest = TRUE) {
       )
     )
 
-  china_ncov <- ncov$overall %>%
-    dplyr::select(currentConfirmedCount:deadCount) %>%
+  china_ncov <- attr(ncov, "overall") %>%
+    # dplyr::select(currentConfirmedCount:deadCount) %>%
     dplyr::mutate(countryName = "中国", countryEnglishName = "China")
 
   world_ncov <- dplyr::bind_rows(china_ncov, other_ncov)
@@ -118,4 +218,35 @@ subset_world_ncov <- function(ncov, latest = TRUE) {
   }
 
   world_ncov
+}
+
+#' Correct names of cities in ncov data to consistent with the cities names in
+#'  leafletCN map
+#'
+#' Since the latest data was uesed for visualization, only correct the latest data
+#'
+#' @param ncov ncov data
+#' @importFrom dplyr filter inner_join mutate select
+#' @noRd
+correct_ncov_cities <- function(ncov, province) {
+  # xianggang aomen and taiwan, no cities ncov data
+  ref_names <- leafletCN::mapNames
+  no_cities <- match(
+    c("Hong Kong", "Macau", "Taiwan"),
+    ref_names$name_en
+  ) %>%
+    ref_names[c("name", "label")][., ] %>%
+    unlist()
+  if (province %in% no_cities) {
+    stop("ncov does not contian data on Hong Kang, Macau, or Taiwan")
+  }
+
+  res <- inner_join(
+    ncov,
+    city_reference,
+    by = c("cityName" = "origin")
+  ) %>%
+    mutate(cityName = corrected)
+
+  res
 }

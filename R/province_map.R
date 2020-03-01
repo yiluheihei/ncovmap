@@ -44,7 +44,8 @@ plot_province_map <- function(ncov,
     province_map <- leafletCN::leafletGeo(
       province,
       province_cities_ncov,
-      valuevar = ~ key_level)
+      namevar = ~cityName,
+      valuevar = ~key_level)
 
     # sort the `province_cities_ncov` according to city names in `province_map`
     # province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
@@ -246,38 +247,6 @@ format_labels <- function(bins, sep = "~") {
   labels
 }
 
-#' Correct names of cities in ncov data
-#' Since the latest data was uesed for visualization, only correct the latest data
-#'
-#' @param ncov ncov data
-#' @importFrom dplyr filter inner_join mutate select
-#' @noRd
-correct_ncov_cities <- function(ncov, province) {
-  # xianggang aomen and taiwan, no cities ncov data
-  ref_names <- leafletCN::mapNames
-  no_cities <- match(
-    c("Hong Kong", "Macau", "Taiwan"),
-    ref_names$name_en
-  ) %>%
-    ref_names[c("name", "label")][., ] %>%
-    unlist()
-  if (province %in% no_cities) {
-    stop("ncov does not contian data on Hong Kang, Macau, or Taiwan")
-  } else {
-    p_ncov <- ncov$cities[[1]]
-  }
-
-  res <- inner_join(
-    p_ncov,
-    city_reference,
-    by = c("cityName" = "origin")
-  ) %>%
-    mutate(cityName = corrected) %>%
-    select(cityName:deadCount)
-
-  res
-}
-
 
 #' Add cities in which the count of ncov is 0
 #' @noRd
@@ -302,27 +271,6 @@ tidy_province_ncov <- function(ncov, province) {
 
   province_cities_ncov
 }
-
-
-# sort province data according to city names of map
-# sort_province_ncov_map <- function(province_cities_ncov, map) {
-#   china_cities <- readr::read_csv("data-raw/china_city_list.csv")
-#   # data correction
-#   china_cities <- dplyr::mutate(china_cities,
-#                                 Province_EN = dplyr::case_when(
-#                                   Province_EN == "anhui" ~ "Anhui",
-#                                   Province_EN == "guizhou" ~ "Guizhou",
-#                                   Province_EN == "hubei" ~ "Hubei",
-#                                   Province_EN == "xinjiang" ~ "Xinjiang",
-#                                   TRUE ~ Province_EN
-#                                 ))
-#   cities <-  china_cities$City_Admaster[
-#     match(province_cities_ncov$cityName, china_cities$City)]
-#  province_cities_ncov <- province_cities_ncov[match(map$name, cities), ]
-#
-#   province_cities_ncov
-#
-# }
 
 #' Title css style
 #' @references https://stackoverflow.com/questions/49072510/r-add-title-to-leaflet-map

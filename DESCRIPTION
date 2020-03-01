@@ -21,12 +21,12 @@ Imports:
     sf,
     readr,
     jsonlite,
-    leafletCN,
-    curl
+    leafletCN
 Depends: R (>= 2.10)
 Suggests: 
     knitr,
     rmarkdown,
-    rnaturalearthdata
+    rnaturalearthdata,
+    curl
 Remotes: yiluheihei/leafletCN
 VignetteBuilder: knitr

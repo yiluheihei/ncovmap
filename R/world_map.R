@@ -25,8 +25,8 @@ plot_world_map <- function(x,
   countries_en_zh <- system.file(
     "counties_en_zh.csv",
     package = "ncovmap"
-  )
-  countries_en_zh <- readr::read_csv(countries_en_zh)
+  ) %>%
+    readr::read_csv()
   world <- merge(world, countries_en_zh)
 
   # correct countries names according to world map
@@ -45,15 +45,7 @@ plot_world_map <- function(x,
 
   bins <- setdiff(bins, c(0, 1)) %>%
     c(0, 1, .)
-
   world_ncov$key <- world_ncov[[key]]
-  world_ncov$key_level <-  cut(
-    world_ncov$key,
-    breaks = c(bins, Inf),
-    labels = format_labels(bins),
-    include.lowest = TRUE,
-    right = FALSE
-  )
 
   map_dat <-  merge(
     world,
@@ -62,7 +54,15 @@ plot_world_map <- function(x,
     by.y = "countryEnglishName",
     all.x = TRUE
   )
-  map_dat[is.na(map_dat)] <- 0
+  map_dat <- dplyr::mutate_if(map_dat, is.numeric, ~ ifelse(is.na(.x), 0, .x))
+  map_dat$key_level <-  cut(
+    map_dat$key,
+    breaks = c(bins, Inf),
+    labels = format_labels(bins),
+    include.lowest = TRUE,
+    right = FALSE
+  )
+  # map_dat[is.na(map_dat)] <- 0
 
   pal <- leaflet::colorFactor(
     palette = "Reds",
