@@ -1,17 +1,18 @@
-#' Download ncov 2019 data from http://lab.isaaclin.cn/nCoV/
+#' Download ncov 2019 area and overall data from http://lab.isaaclin.cn/nCoV/
 #'
 #' @export
-get_ncov <- function() {
+get_ncov2 <- function(latest = TRUE) {
   api <- "https://lab.isaaclin.cn/nCoV/api/"
+  para <- ifelse(latest, "?latest=1", "?latest=0")
 
-  ncov <- jsonlite::fromJSON(paste0(api, "area", "?latest=0"))$results
+  ncov <- jsonlite::fromJSON(paste0(api, "area", para))$results
   ncov$updateTime <- conv_time(ncov$updateTime)
   ncov <- purrr::map_dfr(
     1:nrow(ncov),
     ~ unnest_province_ncov(ncov[.x, ])
   )
 
-  overall <- jsonlite::fromJSON(paste0(api, "overall"))$results
+  overall <- jsonlite::fromJSON(paste0(api, "overall", para))$results
   overall$updateTime <- conv_time(overall$updateTime)
 
   structure(
@@ -23,13 +24,15 @@ get_ncov <- function() {
   )
 }
 
+
+
 # unnest the cities data
 unnest_province_ncov <- function(x) {
   p_ncov <- dplyr::select(
     x,
     dplyr::starts_with(c("province", "country", "continent")),
-    -countryShortCode,
-    cityName,
+    # -countryShortCode,
+    # cityName,
     cities,
     currentConfirmedCount:deadCount,
     updateTime
@@ -48,7 +51,7 @@ unnest_province_ncov <- function(x) {
     }
     # missing some vars
     c_var <- names(c_ncov)
-    if (! "cityName" %in% c_var) {
+    if (!"cityName" %in% c_var) {
       stop("City name must be listed in the cities ncov")
     }
     count_names <- c(
@@ -118,7 +121,7 @@ print.ncov <- function(x) {
 #' @param i word
 #'
 #' @export
-`[.ncov` <- function(x, i, j, latest = TRUE, drop = FALSE) {
+`[.ncov` <- function(x, i, j, latest = TRUE) {
   if (length(i) == 1) {
     if (i %in% c("world", "World")) {
       res <- subset_world_ncov(x, latest = latest)
@@ -127,7 +130,7 @@ print.ncov <- function(x) {
       res <- subset_china_ncov(x, latest)
       type <- "China"
     } else {
-      res <- subset_province_ncov(ncov, i, latest)
+      res <- subset_province_ncov(x, i, latest)
       type <- res$provinceEnglishName[1]
     }
   } else {
@@ -138,13 +141,13 @@ print.ncov <- function(x) {
     type <- paste(unique(res$provinceEnglishName), collapse = ", ")
   }
 
-  res <- res[, j, drop = drop]
+  res <- res[, j, drop = FALSE]
 
   structure(
     res,
     class = c("ncov", "data.frame"),
     type = type,
-    from = attr(ncov, "from")
+    from = attr(x, "from")
   )
 }
 

@@ -33,12 +33,12 @@ library(leafletCN)
 ## 下载ncov数据
 
 ``` r
-ncov <- get_ncov()
+ncov <- get_ncov2()
 ncov
 ```
 
     ## All COVID 2019 Data
-    ## Updated at 2020-03-01 10:06:02 
+    ## Updated at 2020-03-01 12:54:04 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ## 提取省市或国家数据

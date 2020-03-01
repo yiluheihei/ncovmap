@@ -65,12 +65,12 @@ ncov数据中有个别城市名字是用缩写，比如湖北省的如"恩施州
 
 读取数据，加载包
 
-```{r data}
+```{r data, message=FALSE}
 library(ncovmap)
 library(leafletCN)
 library(magrittr)
 # 为了通过 travis CI 选择从数据仓库下载数据
-ncov <- get_ncov()
+ncov <- get_ncov2(latest = FALSE)
 ```
 
 `plot_province_map()`画图
