@@ -1,6 +1,6 @@
 ncov 2019
 ================
-2020年03月02日
+2020年03月03日
 
 ``` r
 knitr::opts_chunk$set(
@@ -38,7 +38,7 @@ ncov
 ```
 
     ## All COVID 2019 Data
-    ## Updated at 2020-03-02 15:05:02 
+    ## Updated at 2020-03-02 16:01:12 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ## 提取省市或国家数据
@@ -94,8 +94,6 @@ world
 plot_china_map(china, legend_position = "bottomleft")
 ```
 
-    ## Warning: Setting row names on a tibble is deprecated.
-
 ![](man/figures/china-map-1.png)<!-- -->
 
 ## 省份疫情图
@@ -110,10 +108,6 @@ plot_province_map(
 )
 ```
 
-    ## Warning: Setting row names on a tibble is deprecated.
-    
-    ## Warning: Setting row names on a tibble is deprecated.
-
 ![](man/figures/hubei-map-1.png)<!-- -->
 
 北京市
@@ -125,10 +119,6 @@ plot_province_map(
   bins = c(0, 10, 50, 100)
 )
 ```
-
-    ## Warning: Setting row names on a tibble is deprecated.
-    
-    ## Warning: Setting row names on a tibble is deprecated.
 
 ![](man/figures/beijing-map-1.png)<!-- -->
 
