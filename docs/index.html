@@ -82,7 +82,7 @@
 <div id="ncov-2019" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#ncov-2019" class="anchor"></a>ncov 2019</h1></div>
-<p>2020年03月01日</p>
+<p>2020年03月02日</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">knitr<span class="op">::</span>opts_chunk<span class="op">$</span><span class="kw">set</span>(</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">  <span class="dt">fig.path =</span> <span class="st">"man/figures/"</span>,</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3">  <span class="dt">message =</span> <span class="ot">FALSE</span></a>
@@ -90,7 +90,7 @@
 <p>ncov 疫情图，参考<a href="https://github.com/pzhaonet/ncovr">ncovr</a>, 具体使用详情见<a href="https://yiluheihei.github.io/ncovmap/articles/Introduction.html">vignette</a>. 暂放于此，后续可并入<a href="https://github.com/pzhaonet/ncovr">ncovr</a></p>
 <div class="section level2">
 <h2>数据来源</h2>
-<p>数据获取通过<a href="https://github.com/BlankerL/DXY-COVID-19-Crawler">DXY-COVID-19-Crawler</a> api 下载，调用<code><a href="reference/get_ncov.html">get_ncov()</a></code>即可获取。</p>
+<p>数据获取通过<a href="https://github.com/BlankerL/DXY-COVID-19-Crawler">DXY-COVID-19-Crawler</a> api 下载，调用<code>get_ncov()</code>即可获取。</p>
 </div>
 <div class="section level2">
 <h2>安装</h2>
@@ -102,10 +102,10 @@
 <div id="ncov" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ncov" class="anchor"></a>下载ncov数据</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">ncov &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_ncov.html">get_ncov</a></span>()</a>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">ncov &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_ncov2.html">get_ncov2</a></span>()</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">ncov</a></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## All COVID 2019 Data</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">## Updated at 2020-03-01 10:06:02 </span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">## Updated at 2020-03-02 15:05:02 </span></a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">## From https://lab.isaaclin.cn/nCoV/api/</span></a></code></pre></div>
 </div>
 <div class="section level2">
@@ -114,18 +114,18 @@
 <a class="sourceLine" id="cb6-2" data-line-number="2">china &lt;-<span class="st"> </span>ncov[<span class="st">'china'</span>]</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">china</a></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co">## China COVID 2019 Data</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">## Updated at 2020-03-01 10:06:02 </span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">## Updated at 2020-03-02 15:05:02 </span></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">## From https://lab.isaaclin.cn/nCoV/api/</span></a></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># 省市数据</span></a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">hubei &lt;-<span class="st"> </span>ncov[<span class="st">'湖北省'</span>]</a>
 <a class="sourceLine" id="cb8-3" data-line-number="3">hubei</a></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co">## Hubei COVID 2019 Data</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">## Updated at 2020-03-01 10:06:02 </span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">## Updated at 2020-03-02 15:05:02 </span></a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">## From https://lab.isaaclin.cn/nCoV/api/</span></a></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">beijing &lt;-<span class="st"> </span>ncov[<span class="st">'北京市'</span>]</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">beijing</a></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co">## Beijing COVID 2019 Data</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">## Updated at 2020-03-01 03:01:02 </span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">## Updated at 2020-03-02 08:51:02 </span></a>
 <a class="sourceLine" id="cb11-3" data-line-number="3"><span class="co">## From https://lab.isaaclin.cn/nCoV/api/</span></a></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">beijing<span class="op">$</span>cities</a></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co">## NULL</span></a></code></pre></div>
@@ -133,7 +133,7 @@
 <a class="sourceLine" id="cb14-2" data-line-number="2">world &lt;-<span class="st"> </span>ncov[<span class="st">'world'</span>]</a>
 <a class="sourceLine" id="cb14-3" data-line-number="3">world</a></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co">## World COVID 2019 Data</span></a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">## Updated at 2020-03-01 07:03:18 </span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">## Updated at 2020-03-02 00:04:10 </span></a>
 <a class="sourceLine" id="cb15-3" data-line-number="3"><span class="co">## From https://lab.isaaclin.cn/nCoV/api/</span></a></code></pre></div>
 </div>
 <div class="section level2">

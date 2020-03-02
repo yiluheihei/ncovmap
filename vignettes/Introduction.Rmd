@@ -70,7 +70,16 @@ library(ncovmap)
 library(leafletCN)
 library(magrittr)
 # 为了通过 travis CI 选择从数据仓库下载数据
-ncov <- get_ncov2(latest = FALSE)
+ncov <- get_ncov2()
+```
+
+取子集
+
+```{r subset}
+hubei <- ncov["湖北省"]
+guangdong <- ncov["广东"]
+china <- ncov["china"]
+world <- ncov["world"]
 ```
 
 `plot_province_map()`画图
@@ -78,8 +87,7 @@ ncov <- get_ncov2(latest = FALSE)
 ```{r map_hubei}
 # 例数为0的城市以白色突出显示
 hubei <- ncov["湖北省"]
-plot_province_map(hubei, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000)
-)
+plot_province_map(hubei, "湖北省", bins = c(0, 100, 200, 500, 1000, 10000))
 ```
 
 ```{r map_guangdong}
@@ -102,9 +110,9 @@ plot_province_map2(guangdong, "广东省", bins = c(0, 10, 100, 200))
 ```{r all-province}
 # 没有台湾,香港,澳门,南海等地数据
 provinces <- setdiff(
-  mapNames$name,
-  c("台湾省", "香港特别行政区", 
-    "澳门特别行政区", "南海诸岛", "中国"
+  leafletCN::regionNames('china'),
+  c("台湾", "香港", 
+    "澳门", "南海诸岛"
   )
 )
 

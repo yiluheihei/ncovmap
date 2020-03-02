@@ -233,7 +233,7 @@ subset_world_ncov <- function(ncov, latest = TRUE) {
 #' @noRd
 correct_ncov_cities <- function(ncov, province) {
   # xianggang aomen and taiwan, no cities ncov data
-  ref_names <- leafletCN::mapNames
+  ref_names <- leafletCN::leafletcn.map.names
   no_cities <- match(
     c("Hong Kong", "Macau", "Taiwan"),
     ref_names$name_en

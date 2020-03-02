@@ -1,6 +1,6 @@
 ncov 2019
 ================
-2020年03月01日
+2020年03月02日
 
 ``` r
 knitr::opts_chunk$set(
@@ -38,7 +38,7 @@ ncov
 ```
 
     ## All COVID 2019 Data
-    ## Updated at 2020-03-01 12:54:04 
+    ## Updated at 2020-03-02 15:05:02 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ## 提取省市或国家数据
@@ -50,7 +50,7 @@ china
 ```
 
     ## China COVID 2019 Data
-    ## Updated at 2020-03-01 10:06:02 
+    ## Updated at 2020-03-02 15:05:02 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ``` r
@@ -60,7 +60,7 @@ hubei
 ```
 
     ## Hubei COVID 2019 Data
-    ## Updated at 2020-03-01 10:06:02 
+    ## Updated at 2020-03-02 15:05:02 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ``` r
@@ -69,7 +69,7 @@ beijing
 ```
 
     ## Beijing COVID 2019 Data
-    ## Updated at 2020-03-01 03:01:02 
+    ## Updated at 2020-03-02 08:51:02 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ``` r
@@ -85,7 +85,7 @@ world
 ```
 
     ## World COVID 2019 Data
-    ## Updated at 2020-03-01 07:03:18 
+    ## Updated at 2020-03-02 00:04:10 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ## 国内总体疫情图
