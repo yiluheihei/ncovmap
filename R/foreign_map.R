@@ -3,7 +3,7 @@
 #' @param country country name
 #' @export
 #' @rdname plot_province_map
-plot_foeign_map <- function(ncov,
+plot_foreign_map <- function(ncov,
                             country,
                             key = c("confirmedCount", "suspectedCount",
                                     "curedCount", "deadCount"),
@@ -17,6 +17,14 @@ plot_foeign_map <- function(ncov,
   legend_position <- match.arg(legend_position)
 
   country <- tolower(country)
+
+  country_states <- system.file(
+    "foreign_cities.csv",
+    package = "ncovmap"
+  ) %>%
+    readr::read_csv() %>%
+    dplyr::filter(name_zh == country | name == country)
+
   if (grepl(country, "korea")) {
     country <- "south korea"
   }
@@ -24,24 +32,37 @@ plot_foeign_map <- function(ncov,
   bins <- setdiff(bins, c(0, 1)) %>%
     c(0, 1, .)
 
-  country_map <- rnaturalearth::ne_states(country)
+  if (country == "italy") {
+    json_file <- system.file(
+      paste0("json/", country, ".json"),
+      package = "ncovmap"
+    )
+    country_map <- leafletCN::read.geoShape(json_file)
+  } else {
+    country_map <- rnaturalearth::ne_states(country)
+    # country_states <- system.file(
+    #   paste0(sub(" ", "_", country), "_states.csv"),
+    #   package = "ncovmap"
+    # ) %>%
+    #   readr::read_csv()
+  }
 
-  country_states <- system.file(
-    paste0(sub(" ", "_", country), "_states.csv"),
-    package = "ncovmap"
-  ) %>%
-    readr::read_csv()
+  if (country == "south korea") {
+    country_map$name <- country_map$name_de
+  }
 
-  country_map$name_zh <- country_states$name_zh[
-    match(country_map$name, country_states$name)
-    ]
+  country_map$provinceName <- country_states$provinceName[
+    match(country_map$name, country_states$provinceEnglishName)
+  ]
+  # country_map$name_zh <- country_states$name_zh[
+  #  match(country_map$name, country_states$name)
+  #  ]
 
   ncov <- dplyr::right_join(
     ncov,
     country_states,
-    by = c("provinceName" = "name_zh")
+    by = c("provinceName" = "provinceName")
   )
-
   ncov <-  dplyr::mutate_if(ncov, is.numeric, ~ ifelse(is.na(.x), 0, .x))
 
   ncov$key <- ncov[[key]]
@@ -53,7 +74,7 @@ plot_foeign_map <- function(ncov,
     right = FALSE
   )
 
-  index <- match(country_map$name_zh, ncov$provinceName)
+  index <- match(country_map$provinceName, ncov$provinceName)
   country_map$value <- ncov[["key_level"]][index]
   ncov <- ncov[index, ]
 

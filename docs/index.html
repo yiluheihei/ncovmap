@@ -105,7 +105,7 @@
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">ncov &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_ncov2.html">get_ncov2</a></span>()</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">ncov</a></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## All COVID 2019 Data</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">## Updated at 2020-03-05 06:36:01 </span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">## Updated at 2020-03-05 09:54:02 </span></a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">## From https://lab.isaaclin.cn/nCoV/api/</span></a></code></pre></div>
 </div>
 <div class="section level2">
@@ -120,7 +120,7 @@
 <a class="sourceLine" id="cb8-2" data-line-number="2">hubei &lt;-<span class="st"> </span>ncov[<span class="st">'湖北省'</span>]</a>
 <a class="sourceLine" id="cb8-3" data-line-number="3">hubei</a></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co">## Hubei COVID 2019 Data</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">## Updated at 2020-03-05 06:36:01 </span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">## Updated at 2020-03-05 07:47:01 </span></a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">## From https://lab.isaaclin.cn/nCoV/api/</span></a></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">beijing &lt;-<span class="st"> </span>ncov[<span class="st">'北京市'</span>]</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">beijing</a></code></pre></div>
@@ -164,16 +164,41 @@
 <p><img src="reference/figures/world-map-1.png"><!-- --></p>
 </div>
 <div class="section level2">
-<h2>韩国疫情图</h2>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">korea_ncov &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_foeign_ncov.html">get_foeign_ncov</a></span>(<span class="st">"韩国"</span>)</a>
-<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="kw"><a href="reference/plot_province_map.html">plot_foeign_map</a></span>(korea_ncov, <span class="st">"korea"</span>)</a></code></pre></div>
+<h2>国外疫情图</h2>
+<div class="section level3">
+<h3>韩国疫情图</h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">korea_ncov &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_foreign_ncov.html">get_foreign_ncov</a></span>(<span class="st">"韩国"</span>)</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="kw"><a href="reference/plot_province_map.html">plot_foreign_map</a></span>(korea_ncov, <span class="st">"korea"</span>)</a></code></pre></div>
 <p><img src="reference/figures/korea-map-1.png"><!-- --></p>
 </div>
-<div class="section level2">
-<h2>日本疫情图</h2>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">jp_ncov &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_foeign_ncov.html">get_foeign_ncov</a></span>(<span class="st">"日本"</span>)</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw"><a href="reference/plot_province_map.html">plot_foeign_map</a></span>(jp_ncov, <span class="st">"japan"</span>)</a></code></pre></div>
+<div class="section level3">
+<h3>日本疫情图</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">jp_ncov &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_foreign_ncov.html">get_foreign_ncov</a></span>(<span class="st">"日本"</span>)</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw"><a href="reference/plot_province_map.html">plot_foreign_map</a></span>(jp_ncov, <span class="st">"japan"</span>)</a></code></pre></div>
 <p><img src="reference/figures/jp-map-1.png"><!-- --></p>
+</div>
+<div class="section level3">
+<h3>伊朗疫情图</h3>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">iran_ncov &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_foreign_ncov.html">get_foreign_ncov</a></span>(<span class="st">"伊朗"</span>)</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="kw"><a href="reference/plot_province_map.html">plot_foreign_map</a></span>(iran_ncov, <span class="st">"iran"</span>)</a></code></pre></div>
+<p><img src="reference/figures/iran-map-1.png"><!-- --></p>
+</div>
+<div class="section level3">
+<h3>意大利疫情图</h3>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">italy_ncov &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_foreign_ncov.html">get_foreign_ncov</a></span>(<span class="st">"意大利"</span>)</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw"><a href="reference/plot_province_map.html">plot_foreign_map</a></span>(italy_ncov, <span class="st">"italy"</span>)</a></code></pre></div>
+<p><img src="reference/figures/italy-map-1.png"><!-- --></p>
+</div>
+<div class="section level3">
+<h3>直接画这四个国家的疫情图</h3>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">foreign_countries &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"韩国"</span>, <span class="st">"伊朗"</span>, <span class="st">"日本"</span>, <span class="st">"意大利"</span>)</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(foreign_countries) &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"korea"</span>, <span class="st">"iran"</span>, <span class="st">"japan"</span>, <span class="st">"italy"</span>)</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">htmltools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/htmltools/man/tag.html">tagList</a></span>(purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/imap.html">imap</a></span>(</a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">  foreign_countries, </a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">  <span class="op">~</span><span class="st"> </span><span class="kw"><a href="reference/get_foreign_ncov.html">get_foreign_ncov</a></span>(.x) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb24-6" data-line-number="6"><span class="st">    </span><span class="kw"><a href="reference/plot_province_map.html">plot_foreign_map</a></span>(.y)</a>
+<a class="sourceLine" id="cb24-7" data-line-number="7">))</a></code></pre></div>
+</div>
 </div>
 </div>
   </div>

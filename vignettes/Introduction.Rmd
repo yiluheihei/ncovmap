@@ -153,14 +153,25 @@ plot_world_map(world, legend_position = "bottomleft")
 ## 韩国疫情图
 
 ```{r korea-map}
-korea_ncov <- get_foeign_ncov("韩国")
-plot_foeign_map(korea_ncov, "korea")
+korea_ncov <- get_foreign_ncov("韩国")
+plot_foreign_map(korea_ncov, "korea")
 ```
 
 ## 日本疫情图
 
 ```{r jp-map}
-jp_ncov <- get_foeign_ncov("日本")
-plot_foeign_map(jp_ncov, "japan")
+jp_ncov <- get_foreign_ncov("日本")
+plot_foreign_map(jp_ncov, "japan")
 ```
 
+## 四个国家疫情图
+
+```{r four-country-map}
+foreign_countries <- c("韩国", "伊朗", "日本", "意大利")
+names(foreign_countries) <- c("korea", "iran", "japan", "italy")
+htmltools::tagList(purrr::imap(
+  foreign_countries, 
+  ~ get_foreign_ncov(.x) %>% 
+    plot_foreign_map(.y)
+))
+```

@@ -38,7 +38,7 @@ ncov
 ```
 
     ## All COVID 2019 Data
-    ## Updated at 2020-03-05 06:36:01 
+    ## Updated at 2020-03-05 09:54:02 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ## 提取省市或国家数据
@@ -60,7 +60,7 @@ hubei
 ```
 
     ## Hubei COVID 2019 Data
-    ## Updated at 2020-03-05 06:36:01 
+    ## Updated at 2020-03-05 07:47:01 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ``` r
@@ -130,20 +130,52 @@ plot_world_map(world, legend_position = "bottomleft")
 
 ![](man/figures/world-map-1.png)<!-- -->
 
-## 韩国疫情图
+## 国外疫情图
+
+### 韩国疫情图
 
 ``` r
-korea_ncov <- get_foeign_ncov("韩国")
-plot_foeign_map(korea_ncov, "korea")
+korea_ncov <- get_foreign_ncov("韩国")
+plot_foreign_map(korea_ncov, "korea")
 ```
 
 ![](man/figures/korea-map-1.png)<!-- -->
 
-## 日本疫情图
+### 日本疫情图
 
 ``` r
-jp_ncov <- get_foeign_ncov("日本")
-plot_foeign_map(jp_ncov, "japan")
+jp_ncov <- get_foreign_ncov("日本")
+plot_foreign_map(jp_ncov, "japan")
 ```
 
 ![](man/figures/jp-map-1.png)<!-- -->
+
+### 伊朗疫情图
+
+``` r
+iran_ncov <- get_foreign_ncov("伊朗")
+plot_foreign_map(iran_ncov, "iran")
+```
+
+![](man/figures/iran-map-1.png)<!-- -->
+
+### 意大利疫情图
+
+``` r
+italy_ncov <- get_foreign_ncov("意大利")
+plot_foreign_map(italy_ncov, "italy")
+```
+
+![](man/figures/italy-map-1.png)<!-- -->
+
+### 直接画这四个国家的疫情图
+
+``` r
+foreign_countries <- c("韩国", "伊朗", "日本", "意大利")
+names(foreign_countries) <- c("korea", "iran", "japan", "italy")
+htmltools::tagList(purrr::imap(
+  foreign_countries, 
+  ~ get_foreign_ncov(.x) %>% 
+    plot_foreign_map(.y)
+))
+```

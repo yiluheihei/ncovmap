@@ -28,7 +28,7 @@ get_ncov2 <- function(latest = TRUE) {
 #'
 #' @param country foeign country name
 #' @export
-get_foeign_ncov <- function(country) {
+get_foreign_ncov <- function(country) {
   wy_ncov <- jsonlite::fromJSON("https://c.m.163.com/ug/api/wuhan/app/data/list-total")
   wy_ncov <- wy_ncov$data$areaTree
   foreign_ncov <- wy_ncov[wy_ncov$name == country, ]

@@ -3,7 +3,7 @@
 %   R/world_map.R
 \name{plot_china_map}
 \alias{plot_china_map}
-\alias{plot_foeign_map}
+\alias{plot_foreign_map}
 \alias{plot_province_map}
 \alias{plot_province_map2}
 \alias{plot_world_map}
@@ -19,7 +19,7 @@ plot_china_map(
   color = "Reds"
 )
 
-plot_foeign_map(
+plot_foreign_map(
   ncov,
   country,
   key = c("confirmedCount", "suspectedCount", "curedCount", "deadCount"),

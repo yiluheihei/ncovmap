@@ -2,10 +2,10 @@
 
 S3method("[",ncov)
 S3method(print,ncov)
-export(get_foeign_ncov)
+export(get_foreign_ncov)
 export(get_ncov2)
 export(plot_china_map)
-export(plot_foeign_map)
+export(plot_foreign_map)
 export(plot_province_map)
 export(plot_province_map2)
 export(plot_world_map)
