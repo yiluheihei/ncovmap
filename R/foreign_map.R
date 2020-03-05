@@ -24,14 +24,6 @@ plot_foeign_map <- function(ncov,
   bins <- setdiff(bins, c(0, 1)) %>%
     c(0, 1, .)
 
-  ncov$key <- ncov[[key]]
-  ncov$key_level <-  cut(
-    ncov$key,
-    breaks = c(bins, Inf),
-    labels = format_labels(bins),
-    include.lowest = TRUE,
-    right = FALSE
-  )
   country_map <- rnaturalearth::ne_states(country)
 
   country_states <- system.file(
@@ -43,6 +35,23 @@ plot_foeign_map <- function(ncov,
   country_map$name_zh <- country_states$name_zh[
     match(country_map$name, country_states$name)
     ]
+
+  ncov <- dplyr::right_join(
+    ncov,
+    country_states,
+    by = c("provinceName" = "name_zh")
+  )
+
+  ncov <-  dplyr::mutate_if(ncov, is.numeric, ~ ifelse(is.na(.x), 0, .x))
+
+  ncov$key <- ncov[[key]]
+  ncov$key_level <-  cut(
+    ncov$key,
+    breaks = c(bins, Inf),
+    labels = format_labels(bins),
+    include.lowest = TRUE,
+    right = FALSE
+  )
 
   index <- match(country_map$name_zh, ncov$provinceName)
   country_map$value <- ncov[["key_level"]][index]

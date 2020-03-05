@@ -105,7 +105,7 @@
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">ncov &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_ncov2.html">get_ncov2</a></span>()</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">ncov</a></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## All COVID 2019 Data</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">## Updated at 2020-03-05 01:38:01 </span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">## Updated at 2020-03-05 06:36:01 </span></a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">## From https://lab.isaaclin.cn/nCoV/api/</span></a></code></pre></div>
 </div>
 <div class="section level2">
@@ -114,13 +114,13 @@
 <a class="sourceLine" id="cb6-2" data-line-number="2">china &lt;-<span class="st"> </span>ncov[<span class="st">'china'</span>]</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">china</a></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co">## China COVID 2019 Data</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">## Updated at 2020-03-04 10:00:02 </span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">## Updated at 2020-03-05 04:27:05 </span></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">## From https://lab.isaaclin.cn/nCoV/api/</span></a></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># 省市数据</span></a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">hubei &lt;-<span class="st"> </span>ncov[<span class="st">'湖北省'</span>]</a>
 <a class="sourceLine" id="cb8-3" data-line-number="3">hubei</a></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co">## Hubei COVID 2019 Data</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">## Updated at 2020-03-05 01:38:01 </span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">## Updated at 2020-03-05 06:36:01 </span></a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">## From https://lab.isaaclin.cn/nCoV/api/</span></a></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">beijing &lt;-<span class="st"> </span>ncov[<span class="st">'北京市'</span>]</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">beijing</a></code></pre></div>
@@ -133,7 +133,7 @@
 <a class="sourceLine" id="cb14-2" data-line-number="2">world &lt;-<span class="st"> </span>ncov[<span class="st">'world'</span>]</a>
 <a class="sourceLine" id="cb14-3" data-line-number="3">world</a></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co">## World COVID 2019 Data</span></a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">## Updated at 2020-03-03 01:11:15 </span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">## Updated at 2020-03-05 02:39:09 </span></a>
 <a class="sourceLine" id="cb15-3" data-line-number="3"><span class="co">## From https://lab.isaaclin.cn/nCoV/api/</span></a></code></pre></div>
 </div>
 <div class="section level2">
@@ -168,6 +168,12 @@
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">korea_ncov &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_foeign_ncov.html">get_foeign_ncov</a></span>(<span class="st">"韩国"</span>)</a>
 <a class="sourceLine" id="cb20-2" data-line-number="2"><span class="kw"><a href="reference/plot_province_map.html">plot_foeign_map</a></span>(korea_ncov, <span class="st">"korea"</span>)</a></code></pre></div>
 <p><img src="reference/figures/korea-map-1.png"><!-- --></p>
+</div>
+<div class="section level2">
+<h2>日本疫情图</h2>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">jp_ncov &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_foeign_ncov.html">get_foeign_ncov</a></span>(<span class="st">"日本"</span>)</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw"><a href="reference/plot_province_map.html">plot_foeign_map</a></span>(jp_ncov, <span class="st">"japan"</span>)</a></code></pre></div>
+<p><img src="reference/figures/jp-map-1.png"><!-- --></p>
 </div>
 </div>
   </div>

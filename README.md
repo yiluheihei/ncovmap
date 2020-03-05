@@ -38,7 +38,7 @@ ncov
 ```
 
     ## All COVID 2019 Data
-    ## Updated at 2020-03-05 01:38:01 
+    ## Updated at 2020-03-05 06:36:01 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ## 提取省市或国家数据
@@ -50,7 +50,7 @@ china
 ```
 
     ## China COVID 2019 Data
-    ## Updated at 2020-03-04 10:00:02 
+    ## Updated at 2020-03-05 04:27:05 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ``` r
@@ -60,7 +60,7 @@ hubei
 ```
 
     ## Hubei COVID 2019 Data
-    ## Updated at 2020-03-05 01:38:01 
+    ## Updated at 2020-03-05 06:36:01 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ``` r
@@ -85,7 +85,7 @@ world
 ```
 
     ## World COVID 2019 Data
-    ## Updated at 2020-03-03 01:11:15 
+    ## Updated at 2020-03-05 02:39:09 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ## 国内总体疫情图
@@ -138,3 +138,12 @@ plot_foeign_map(korea_ncov, "korea")
 ```
 
 ![](man/figures/korea-map-1.png)<!-- -->
+
+## 日本疫情图
+
+``` r
+jp_ncov <- get_foeign_ncov("日本")
+plot_foeign_map(jp_ncov, "japan")
+```
+
+![](man/figures/jp-map-1.png)<!-- -->

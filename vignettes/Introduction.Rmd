@@ -157,3 +157,10 @@ korea_ncov <- get_foeign_ncov("韩国")
 plot_foeign_map(korea_ncov, "korea")
 ```
 
+## 日本疫情图
+
+```{r jp-map}
+jp_ncov <- get_foeign_ncov("日本")
+plot_foeign_map(jp_ncov, "japan")
+```
+
