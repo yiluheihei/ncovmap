@@ -37,6 +37,7 @@
 
 <meta property="og:title" content="China ncov map — plot_china_map" />
 <meta property="og:description" content="China ncov map
+Foreign ncov map
 Plot maps for nCoV
 Plot world ncov map" />
 <meta name="twitter:card" content="summary" />
@@ -120,12 +121,13 @@ Plot world ncov map" />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>China ncov map</h1>
-    <small class="dont-index">Source: <a href='https://github.com/yiluheihei/ncovmap/blob/master/R/china_map.R'><code>R/china_map.R</code></a>, <a href='https://github.com/yiluheihei/ncovmap/blob/master/R/province_map.R'><code>R/province_map.R</code></a>, <a href='https://github.com/yiluheihei/ncovmap/blob/master/R/world_map.R'><code>R/world_map.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/yiluheihei/ncovmap/blob/master/R/china_map.R'><code>R/china_map.R</code></a>, <a href='https://github.com/yiluheihei/ncovmap/blob/master/R/foreign_map.R'><code>R/foreign_map.R</code></a>, <a href='https://github.com/yiluheihei/ncovmap/blob/master/R/province_map.R'><code>R/province_map.R</code></a>, and 2 more</small>
     <div class="hidden name"><code>plot_province_map.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>China ncov map</p>
+<p>Foreign ncov map</p>
 <p>Plot maps for nCoV</p>
 <p>Plot world ncov map</p>
     </div>
@@ -135,6 +137,16 @@ Plot world ncov map" />
   <span class='kw'>key</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"confirmedCount"</span>, <span class='st'>"suspectedCount"</span>, <span class='st'>"curedCount"</span>, <span class='st'>"deadCount"</span>),
   <span class='kw'>filter</span> <span class='kw'>=</span> <span class='st'>"unkown"</span>,
   <span class='kw'>bins</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>10</span>, <span class='fl'>100</span>, <span class='fl'>500</span>, <span class='fl'>1000</span>, <span class='fl'>10000</span>),
+  <span class='kw'>legend_title</span> <span class='kw'>=</span> <span class='st'>"Confirmed"</span>,
+  <span class='kw'>legend_position</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"bottomright"</span>, <span class='st'>"topright"</span>, <span class='st'>"bottomleft"</span>, <span class='st'>"topleft"</span>),
+  <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"Reds"</span>
+)
+
+<span class='fu'>plot_foeign_map</span>(
+  <span class='no'>ncov</span>,
+  <span class='no'>country</span>,
+  <span class='kw'>key</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"confirmedCount"</span>, <span class='st'>"suspectedCount"</span>, <span class='st'>"curedCount"</span>, <span class='st'>"deadCount"</span>),
+  <span class='kw'>bins</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>10</span>, <span class='fl'>100</span>, <span class='fl'>500</span>, <span class='fl'>1000</span>),
   <span class='kw'>legend_title</span> <span class='kw'>=</span> <span class='st'>"Confirmed"</span>,
   <span class='kw'>legend_position</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"bottomright"</span>, <span class='st'>"topright"</span>, <span class='st'>"bottomleft"</span>, <span class='st'>"topleft"</span>),
   <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"Reds"</span>
@@ -200,6 +212,10 @@ Plot world ncov map" />
     <tr>
       <th>color</th>
       <td><p>color palette</p></td>
+    </tr>
+    <tr>
+      <th>country</th>
+      <td><p>country name</p></td>
     </tr>
     <tr>
       <th>province</th>

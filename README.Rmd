@@ -84,8 +84,17 @@ plot_province_map(
 )
 ```
 
-## 世界疫情图
+## 世界整体疫情图
 
 ```{r world-map}
 plot_world_map(world, legend_position = "bottomleft")
 ```
+
+## 韩国疫情图
+
+```{r korea-map}
+korea_ncov <- get_foeign_ncov("韩国")
+plot_foeign_map(korea_ncov, "korea")
+```
+
+

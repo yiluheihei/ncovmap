@@ -24,7 +24,32 @@ get_ncov2 <- function(latest = TRUE) {
   )
 }
 
+#' Download ncov 2019 area and overall data from 163
+#'
+#' @param country foeign country name
+#' @export
+get_foeign_ncov <- function(country) {
+  wy_ncov <- jsonlite::fromJSON("https://c.m.163.com/ug/api/wuhan/app/data/list-total")
+  wy_ncov <- wy_ncov$data$areaTree
+  foreign_ncov <- wy_ncov[wy_ncov$name == country, ]
 
+  if ("children" %in% names(foreign_ncov)) {
+    child <- foreign_ncov$children[[1]]
+    child <- data.frame(
+      confirmedCount = child$total$confirm,
+      suspectedCount = child$total$suspect,
+      curedCount = child$total$heal,
+      deadCount =  child$total$dead,
+      provinceName = child$name,
+      updateTime = child$lastUpdateTime,
+      stringsAsFactors = FALSE
+    )
+  } else {
+    stop("No province/city ncov data of", country)
+  }
+
+  child
+}
 
 # unnest the cities data
 unnest_province_ncov <- function(x) {

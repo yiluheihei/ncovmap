@@ -1,6 +1,6 @@
 ncov 2019
 ================
-2020年03月03日
+2020年03月05日
 
 ``` r
 knitr::opts_chunk$set(
@@ -38,7 +38,7 @@ ncov
 ```
 
     ## All COVID 2019 Data
-    ## Updated at 2020-03-02 16:01:12 
+    ## Updated at 2020-03-05 01:38:01 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ## 提取省市或国家数据
@@ -50,7 +50,7 @@ china
 ```
 
     ## China COVID 2019 Data
-    ## Updated at 2020-03-02 15:05:02 
+    ## Updated at 2020-03-04 10:00:02 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ``` r
@@ -60,7 +60,7 @@ hubei
 ```
 
     ## Hubei COVID 2019 Data
-    ## Updated at 2020-03-02 15:05:02 
+    ## Updated at 2020-03-05 01:38:01 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ``` r
@@ -69,7 +69,7 @@ beijing
 ```
 
     ## Beijing COVID 2019 Data
-    ## Updated at 2020-03-02 08:51:02 
+    ## Updated at 2020-03-04 23:14:02 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ``` r
@@ -85,7 +85,7 @@ world
 ```
 
     ## World COVID 2019 Data
-    ## Updated at 2020-03-02 00:04:10 
+    ## Updated at 2020-03-03 01:11:15 
     ## From https://lab.isaaclin.cn/nCoV/api/
 
 ## 国内总体疫情图
@@ -122,10 +122,19 @@ plot_province_map(
 
 ![](man/figures/beijing-map-1.png)<!-- -->
 
-## 世界疫情图
+## 世界整体疫情图
 
 ``` r
 plot_world_map(world, legend_position = "bottomleft")
 ```
 
 ![](man/figures/world-map-1.png)<!-- -->
+
+## 韩国疫情图
+
+``` r
+korea_ncov <- get_foeign_ncov("韩国")
+plot_foeign_map(korea_ncov, "korea")
+```
+
+![](man/figures/korea-map-1.png)<!-- -->
