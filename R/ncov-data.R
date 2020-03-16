@@ -1,54 +1,44 @@
-#' Download ncov 2019 area and overall data from http://lab.isaaclin.cn/nCoV/
+#' Download ncov 2019 area and overall data from http://lab.isaaclin.cn/nCoV/ or
+#' https://github.com/yiluheihei/nCoV-2019-Data
+#'
+#' @param latest logical, download the latest or all ncov data, default \code{TRUE}
 #'
 #' @export
-get_ncov2 <- function(latest = TRUE) {
-  api <- "https://lab.isaaclin.cn/nCoV/api/"
-  para <- ifelse(latest, "?latest=1", "?latest=0")
+get_ncov2 <- function(latest = TRUE, method = c("ncov", "api")) {
+  method <- match.arg(method)
 
-  ncov <- jsonlite::fromJSON(paste0(api, "area", para))$results
-  ncov$updateTime <- conv_time(ncov$updateTime)
-  ncov <- purrr::map_dfr(
-    1:nrow(ncov),
-    ~ unnest_province_ncov(ncov[.x, ])
-  )
+  if (method == "api") {
+    api <- "https://lab.isaaclin.cn/nCoV/api/"
+    para <- ifelse(latest, "?latest=1", "?latest=0")
 
-  overall <- jsonlite::fromJSON(paste0(api, "overall", para))$results
-  overall$updateTime <- conv_time(overall$updateTime)
+    ncov <- jsonlite::fromJSON(paste0(api, "area", para))$results
+    ncov$updateTime <- conv_time(ncov$updateTime)
+    ncov <- purrr::map_dfr(
+      1:nrow(ncov),
+      ~ unnest_province_ncov(ncov[.x, ])
+    )
 
-  structure(
-    ncov,
-    overall = overall,
-    class = c("ncov", "data.frame"),
-    type = "All",
-    from = api
-  )
-}
+    Sys.sleep(5)
 
-#' Download ncov 2019 area and overall data from 163
-#'
-#' @param country foeign country name
-#' @export
-get_foreign_ncov <- function(country) {
-  wy_ncov <- jsonlite::fromJSON("https://c.m.163.com/ug/api/wuhan/app/data/list-total")
-  wy_ncov <- wy_ncov$data$areaTree
-  foreign_ncov <- wy_ncov[wy_ncov$name == country, ]
+    overall <- jsonlite::fromJSON(paste0(api, "overall", para))$results
+    overall$updateTime <- conv_time(overall$updateTime)
 
-  if ("children" %in% names(foreign_ncov)) {
-    child <- foreign_ncov$children[[1]]
-    child <- data.frame(
-      confirmedCount = child$total$confirm,
-      suspectedCount = child$total$suspect,
-      curedCount = child$total$heal,
-      deadCount =  child$total$dead,
-      provinceName = child$name,
-      updateTime = child$lastUpdateTime,
-      stringsAsFactors = FALSE
+    ncov <- structure(
+      ncov,
+      overall = overall,
+      class = c("ncov", "data.frame"),
+      type = "All",
+      from = api
     )
   } else {
-    stop("No province/city ncov data of", country)
+    if (latest) {
+      ncov <- readRDS(gzcon(url("https://github.com/yiluheihei/nCoV-2019-Data/raw/master/ncov_latest.RDS")))
+    } else {
+      ncov <- readRDS(gzcon(url("https://github.com/yiluheihei/nCoV-2019-Data/raw/master/ncov.RDS")))
+    }
   }
 
-  child
+  ncov
 }
 
 # unnest the cities data
@@ -179,6 +169,7 @@ print.ncov <- function(x) {
 #' Subset china ncov
 #' @noRd
 subset_china_ncov <- function(ncov, latest = TRUE) {
+  ncov <- as.data.frame(ncov)
   china_ncov <- dplyr::filter(
     ncov,
     countryEnglishName == "China"
@@ -189,6 +180,12 @@ subset_china_ncov <- function(ncov, latest = TRUE) {
       dplyr::group_modify(~ head(.x, 1L)) %>%
       dplyr::ungroup()
   }
+  china_ncov <- dplyr::select(
+    china_ncov,
+    dplyr::starts_with("province"),
+    currentConfirmedCount:updateTime
+  ) %>%
+    dplyr::arrange(desc(updateTime))
 
   china_ncov
 }
@@ -196,11 +193,11 @@ subset_china_ncov <- function(ncov, latest = TRUE) {
 #' Subset province ncov, as well as foreign country
 #' @noRd
 subset_province_ncov <- function(ncov, i, latest = TRUE) {
+  ncov <- as.data.frame(ncov)
   province_ncov <- dplyr::filter(
     ncov,
     provinceName == i | provinceEnglishName == i | provinceShortName == i,
   )
-
 
   if (latest) {
     province_ncov <- dplyr::filter(
@@ -210,6 +207,12 @@ subset_province_ncov <- function(ncov, i, latest = TRUE) {
     )
   }
 
+  province_ncov <- dplyr::select(
+    province_ncov,
+    dplyr::starts_with(c("city", "province")),
+    currentConfirmedCount:updateTime
+  )
+
   province_ncov
 }
 
@@ -218,24 +221,17 @@ subset_province_ncov <- function(ncov, i, latest = TRUE) {
 subset_world_ncov <- function(ncov, latest = TRUE) {
   # ncov in other countries except china
   other_ncov <- dplyr::filter(
-    ncov,
+    as.data.frame(ncov),
     countryEnglishName != "China"
-  ) %>%
-    # dplyr::select(
-    #   starts_with("country"),
-    #   currentConfirmedCount:deadCount
-    # ) %>%
-    dplyr::mutate(
-      countryEnglishName = dplyr::case_when(
-        countryName == "克罗地亚" ~ "Croatia",
-        countryName == "阿联酋" ~ "United Arab Emirates",
-        TRUE ~ countryEnglishName
-      )
-    )
+  )
 
+  countries <- system.file("countries_list.csv", package = "ncovr") %>%
+    readr::read_csv()
+  china_zh <- countries$countryName[countries$countryEnglishName == "China"]
   china_ncov <- attr(ncov, "overall") %>%
-    # dplyr::select(currentConfirmedCount:deadCount) %>%
-    dplyr::mutate(countryName = "中国", countryEnglishName = "China")
+    dplyr::select(currentConfirmedCount:deadCount)
+  china_ncov$countryName <- china_zh
+  china_ncov$countryEnglishName <- "China"
 
   world_ncov <- dplyr::bind_rows(china_ncov, other_ncov)
 
@@ -245,36 +241,40 @@ subset_world_ncov <- function(ncov, latest = TRUE) {
       dplyr::ungroup()
   }
 
+  world_ncov <- dplyr::select(
+    world_ncov,
+    dplyr::starts_with("country"),
+    currentConfirmedCount:deadCount,
+    updateTime
+  )
+
   world_ncov
 }
 
-#' Correct names of cities in ncov data to consistent with the cities names in
-#'  leafletCN map
+
+#' Download ncov 2019 area and overall data from 163
 #'
-#' Since the latest data was uesed for visualization, only correct the latest data
-#'
-#' @param ncov ncov data
-#' @importFrom dplyr filter inner_join mutate select
-#' @noRd
-correct_ncov_cities <- function(ncov, province) {
-  # xianggang aomen and taiwan, no cities ncov data
-  ref_names <- leafletCN::leafletcn.map.names
-  no_cities <- match(
-    c("Hong Kong", "Macau", "Taiwan"),
-    ref_names$name_en
-  ) %>%
-    ref_names[c("name", "label")][., ] %>%
-    unlist()
-  if (province %in% no_cities) {
-    stop("ncov does not contian data on Hong Kang, Macau, or Taiwan")
+#' @param country foeign country name
+#' @export
+get_foreign_ncov <- function(country) {
+  wy_ncov <- jsonlite::fromJSON("https://c.m.163.com/ug/api/wuhan/app/data/list-total")
+  wy_ncov <- wy_ncov$data$areaTree
+  foreign_ncov <- wy_ncov[wy_ncov$name == country, ]
+
+  if ("children" %in% names(foreign_ncov)) {
+    child <- foreign_ncov$children[[1]]
+    child <- data.frame(
+      confirmedCount = child$total$confirm,
+      suspectedCount = child$total$suspect,
+      curedCount = child$total$heal,
+      deadCount =  child$total$dead,
+      provinceName = child$name,
+      updateTime = child$lastUpdateTime,
+      stringsAsFactors = FALSE
+    )
+  } else {
+    stop("No province/city ncov data of", country)
   }
 
-  res <- inner_join(
-    ncov,
-    city_reference,
-    by = c("cityName" = "origin")
-  ) %>%
-    mutate(cityName = corrected)
-
-  res
+  child
 }

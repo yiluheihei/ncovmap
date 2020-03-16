@@ -28,6 +28,7 @@ plot_province_map <- function(ncov,
   scale <- match.arg(scale)
   legend_position <- match.arg(legend_position)
 
+  ncov <- data.frame(ncov)
   province_cities_ncov <- tidy_province_ncov(ncov, province)
   province_cities_ncov$key <- province_cities_ncov[, key]
 
@@ -149,6 +150,7 @@ plot_province_map2 <- function(ncov,
   scale <- match.arg(scale)
   legend_position <- match.arg(legend_position)
 
+  ncov <- data.frame(ncov)
   province_cities_ncov <- tidy_province_ncov(ncov, province)
   province_cities_ncov$key <- province_cities_ncov[, key]
 
@@ -227,27 +229,6 @@ plot_province_map2 <- function(ncov,
   )
 }
 
-#' Format legend labels
-#' @noRd
-format_labels <- function(bins, sep = "~") {
-  bins <- setdiff(bins, c(0, 1)) %>%
-    c(0, 1, .)
-  n <- length(bins)
-  labels <- vector("character", n -1)
-  labels[1] <- 0
-  labels[n] <- paste(">=", bins[n])
-  for (i in 2:(n-1)) {
-    if (bins[i] == bins[i + 1] - 1) {
-      labels[i] = bins[i]
-    } else {
-      labels[i] <- paste0(bins[i], sep, bins[i + 1]  - 1)
-    }
-  }
-
-  labels
-}
-
-
 #' Add cities in which the count of ncov is 0
 #' @noRd
 tidy_province_ncov <- function(ncov, province) {
@@ -282,4 +263,35 @@ tag.map.title <- htmltools::tags$style(htmltools::HTML("
       font-size: 28px;
     }
   "))
+
+#' Correct names of cities in ncov data to consistent with the cities names in
+#'  leafletCN map
+#'
+#' Since the latest data was uesed for visualization, only correct the latest data
+#'
+#' @param ncov ncov data
+#' @importFrom dplyr filter inner_join mutate select
+#' @noRd
+correct_ncov_cities <- function(ncov, province) {
+  # xianggang aomen and taiwan, no cities ncov data
+  ref_names <- leafletCN::leafletcn.map.names
+  no_cities <- match(
+    c("Hong Kong", "Macau", "Taiwan"),
+    ref_names$name_en
+  ) %>%
+    ref_names[c("name", "label")][., ] %>%
+    unlist()
+  if (province %in% no_cities) {
+    stop("ncov does not contian data on Hong Kang, Macau, or Taiwan")
+  }
+
+  res <- inner_join(
+    ncov,
+    city_reference,
+    by = c("cityName" = "origin")
+  ) %>%
+    mutate(cityName = corrected)
+
+  res
+}
 

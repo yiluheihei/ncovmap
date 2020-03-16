@@ -12,6 +12,8 @@ plot_world_map <- function(x,
   key <- match.arg(key)
   legend_position <- match.arg(legend_position)
 
+  x <- data.frame(x)
+
   # filter Antarctica
   world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
     dplyr::filter(continent != "Antarctica")

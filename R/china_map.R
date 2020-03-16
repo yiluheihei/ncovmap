@@ -13,6 +13,7 @@ plot_china_map <- function(ncov,
   key <- match.arg(key)
   legend_position <- match.arg(legend_position)
 
+  ncov <- data.frame(ncov)
   ncov <- add_nanhai(ncov)
 
   ncov$key <- ncov[[key]]
@@ -43,7 +44,8 @@ plot_china_map <- function(ncov,
   # if the count is 0, manual set the color as white
   colors[china_map$value == 0] <-  "#FFFFFF"
   # set the color for south sea as black
-  colors[china_map$label == "南海诸岛"] <- "#FFFFFF"
+  nanhai_info <- get_southsea_info()
+  colors[china_map$label == nanhai_info$name] <- "#FFFFFF"
   map_colors <- colors
   names(colors) <- china_map$value
   legend_colors <- colors[!duplicated(colors)] %>%
@@ -69,11 +71,20 @@ plot_china_map <- function(ncov,
 }
 
 
-# 南海诸岛为0
+# extract info of South sea
+get_southsea_info <- function(name_en = "Nanhai") {
+  nanhai_info <- leafletCN::leafletcn.map.names[
+    leafletCN::leafletcn.map.names$name_en == "Nanhai",
+  ]
+
+  nanhai_info
+}
+
 add_nanhai <- function(ncov) {
+  nanhai_info <- get_southsea_info()
   nanhai_ncov <- data.frame(
-    provinceName = "南海诸岛",
-    provinceShortName = "南海诸岛",
+    provinceName = nanhai_info$name,
+    provinceShortName = nanhai_info$name,
     provinceEnglishName = "Nanhai",
     stringsAsFactors = FALSE
   )
