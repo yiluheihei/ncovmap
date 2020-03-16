@@ -179,3 +179,8 @@ htmltools::tagList(purrr::imap(
     plot_foreign_map(.y)
 ))
 ```
+
+## 致谢
+
+谢谢BlankerL的提供[API](https://github.com/BlankerL/DXY-COVID-19-Crawler)和
+[数据仓库](https://github.com/BlankerL/DXY-COVID-19-Data)
