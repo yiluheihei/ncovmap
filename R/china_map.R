@@ -28,7 +28,7 @@ plot_china_map <- function(ncov,
     right = FALSE
   )
 
-  china_map <- leafletCN:::readGeoLocal("china")
+  china_map <- leafletCN::leafletGeo("china")
   map_provinces <- china_map$name
   ncov_provinces <- ncov$provinceShortName
   index <- match(map_provinces, ncov_provinces)
