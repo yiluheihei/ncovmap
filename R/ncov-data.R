@@ -7,6 +7,35 @@
 get_ncov2 <- function(latest = TRUE, method = c("ncov", "api")) {
   method <- match.arg(method)
 
+  if (method == "ncov") {
+    if (latest) {
+      ncov <- suppressWarnings(
+        tryCatch(
+          readRDS(gzcon(url("https://github.com/yiluheihei/nCoV-2019-Data/raw/master/ncov_latest.RDS"))),
+          error = function(e) e,
+          warning = function(w) w
+        )
+      )
+    } else {
+      ncov <- suppressWarnings(
+        tryCatch(
+          readRDS(gzcon(url("https://github.com/yiluheihei/nCoV-2019-Data/raw/master/ncov.RDS"))),
+          error = function(e) e,
+          warning = function(w) w
+        )
+      )
+    }
+
+    if (inherits(ncov, "warning")) {
+      warning(
+        ncov$message, "\n",
+        "Get the ncov data from https://lab.isaaclin.cn/nCoV/api/",
+        call. = FALSE
+      )
+      method <- "api"
+    }
+  }
+
   if (method == "api") {
     api <- "https://lab.isaaclin.cn/nCoV/api/"
     para <- ifelse(latest, "?latest=1", "?latest=0")
@@ -30,12 +59,6 @@ get_ncov2 <- function(latest = TRUE, method = c("ncov", "api")) {
       type = "All",
       from = api
     )
-  } else {
-    if (latest) {
-      ncov <- readRDS(gzcon(url("https://github.com/yiluheihei/nCoV-2019-Data/raw/master/ncov_latest.RDS")))
-    } else {
-      ncov <- readRDS(gzcon(url("https://github.com/yiluheihei/nCoV-2019-Data/raw/master/ncov.RDS")))
-    }
   }
 
   ncov
@@ -125,7 +148,7 @@ print.ncov <- function(x) {
   }
 
   cat("Updated at", update_time, "\n")
-  cat("From", attr(x, "from"))
+  cat("From", attr(x, "from"), "\n")
 }
 
 #' Subset ncov data
