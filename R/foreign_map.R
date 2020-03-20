@@ -23,7 +23,7 @@ plot_foreign_map <- function(ncov,
     package = "ncovmap"
   ) %>%
     readr::read_csv() %>%
-    dplyr::filter(name_zh == country | name == country)
+    filter(name_zh == country | name == country)
 
   if (grepl(country, "korea")) {
     country <- "south korea"
@@ -58,12 +58,12 @@ plot_foreign_map <- function(ncov,
   #  match(country_map$name, country_states$name)
   #  ]
 
-  ncov <- dplyr::right_join(
+  ncov <- right_join(
     ncov,
     country_states,
     by = c("provinceName" = "provinceName")
   )
-  ncov <-  dplyr::mutate_if(ncov, is.numeric, ~ ifelse(is.na(.x), 0, .x))
+  ncov <-  mutate_if(ncov, is.numeric, ~ ifelse(is.na(.x), 0, .x))
 
   ncov$key <- ncov[[key]]
   ncov$key_level <-  cut(

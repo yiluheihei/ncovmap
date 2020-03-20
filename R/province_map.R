@@ -25,6 +25,7 @@ plot_province_map <- function(ncov,
                               bins = c(0, 10, 100, 1000),
                               map_title = paste0(province, "nCoV")) {
   key <- match.arg(key)
+  key <- paste0("city_", key)
   scale <- match.arg(scale)
   legend_position <- match.arg(legend_position)
 
@@ -81,7 +82,7 @@ plot_province_map <- function(ncov,
       )
   }
   if (scale == "log") {
-    province_cities_ncov <- dplyr::mutate(
+    province_cities_ncov <- mutate(
       province_cities_ncov,
       key_log = ifelse(key == 0, 0, log10(key))
     )
@@ -240,11 +241,11 @@ tidy_province_ncov <- function(ncov, province) {
   # bind the cities which has no ncov
   if (length(city_zero)) {
     city_zero <- data.frame(cityName = city_zero, stringsAsFactors = FALSE)
-    province_cities_ncov <- dplyr::bind_rows(
+    province_cities_ncov <- bind_rows(
       province_cities_ncov,
       city_zero
     ) %>%
-      dplyr::mutate_if(is.numeric, ~ ifelse(is.na(.x), 0, .x))
+      mutate_if(is.numeric, ~ ifelse(is.na(.x), 0, .x))
   }
   # order the data acccording to regionNames
   province_cities_ncov <- province_cities_ncov[
@@ -270,7 +271,6 @@ tag.map.title <- htmltools::tags$style(htmltools::HTML("
 #' Since the latest data was uesed for visualization, only correct the latest data
 #'
 #' @param ncov ncov data
-#' @importFrom dplyr filter inner_join mutate select
 #' @noRd
 correct_ncov_cities <- function(ncov, province) {
   # xianggang aomen and taiwan, no cities ncov data

@@ -11,9 +11,17 @@ plot_china_map <- function(ncov,
                      legend_position = c("bottomright", "topright", "bottomleft", "topleft"),
                      color = "Reds") {
   key <- match.arg(key)
+  key <- paste0("province_", key)
   legend_position <- match.arg(legend_position)
 
   ncov <- data.frame(ncov)
+  china_cities <- system.file("china_city_list.csv", package = "ncovmap") %>%
+    readr::read_csv()
+  province_short_name <- china_cities$Province[
+    match(ncov$provinceEnglishName, china_cities$Province_EN)
+  ]
+  ncov$provinceShortName <- province_short_name
+
   ncov <- add_nanhai(ncov)
 
   ncov$key <- ncov[[key]]
@@ -30,6 +38,7 @@ plot_china_map <- function(ncov,
 
   china_map <- leafletCN::leafletGeo("china")
   map_provinces <- china_map$name
+
   ncov_provinces <- ncov$provinceShortName
   index <- match(map_provinces, ncov_provinces)
   china_map$value <- ncov[["key_level"]][index]
@@ -88,8 +97,8 @@ add_nanhai <- function(ncov) {
     provinceEnglishName = "Nanhai",
     stringsAsFactors = FALSE
   )
-  ncov <- dplyr::bind_rows(ncov, nanhai_ncov) %>%
-    dplyr::mutate_if(is.numeric, ~ ifelse(is.na(.x), 0, .x))
+  ncov <- bind_rows(ncov, nanhai_ncov) %>%
+    mutate_if(is.numeric, ~ ifelse(is.na(.x), 0, .x))
 
   ncov
 }

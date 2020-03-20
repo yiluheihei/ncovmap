@@ -1,6 +1,6 @@
 ncov 2019
 ================
-2020年03月17日
+2020年03月21日
 
 ``` r
 knitr::opts_chunk$set(
@@ -33,13 +33,13 @@ library(leafletCN)
 ## 下载ncov数据
 
 ``` r
-ncov <- get_ncov2()
+ncov <- get_ncov2(method = "api")
 ncov
 ```
 
     ## All COVID 2019 Data
-    ## Updated at 2020-03-16 15:44:16 
-    ## From https://github.com/yiluheihei/nCoV-2019-Data
+    ## Updated at 2020-03-20 15:48:40 
+    ## From https://github.com/BlankerL/DXY-COVID-19-Data
 
 ## 提取省市或国家数据
 
@@ -50,8 +50,8 @@ china
 ```
 
     ## China COVID 2019 Data
-    ## Updated at 2020-03-16 13:54:38 
-    ## From https://github.com/yiluheihei/nCoV-2019-Data
+    ## Updated at 2020-03-20 09:31:14 
+    ## From https://github.com/BlankerL/DXY-COVID-19-Data
 
 ``` r
 # 省市数据
@@ -60,8 +60,8 @@ hubei
 ```
 
     ## Hubei COVID 2019 Data
-    ## Updated at 2020-03-16 13:54:01 
-    ## From https://github.com/yiluheihei/nCoV-2019-Data
+    ## Updated at 2020-03-20 07:29:42 
+    ## From https://github.com/BlankerL/DXY-COVID-19-Data
 
 ``` r
 beijing <- ncov['北京市']
@@ -69,8 +69,8 @@ beijing
 ```
 
     ## Beijing COVID 2019 Data
-    ## Updated at 2020-03-16 07:44:16 
-    ## From https://github.com/yiluheihei/nCoV-2019-Data
+    ## Updated at 2020-03-20 06:19:56 
+    ## From https://github.com/BlankerL/DXY-COVID-19-Data
 
 ``` r
 beijing$cities
@@ -85,8 +85,8 @@ world
 ```
 
     ## World COVID 2019 Data
-    ## Updated at 2020-03-16 06:53:45 
-    ## From https://github.com/yiluheihei/nCoV-2019-Data
+    ## Updated at 2020-03-20 15:29:10 
+    ## From https://github.com/BlankerL/DXY-COVID-19-Data
 
 ## 国内总体疫情图
 

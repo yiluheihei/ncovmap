@@ -35,7 +35,7 @@ library(leafletCN)
 ## 下载ncov数据
 
 ```{r data, message=FALSE}
-ncov <- get_ncov2()
+ncov <- get_ncov2(method = "api")
 ncov
 ```
 

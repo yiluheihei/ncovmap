@@ -10,13 +10,14 @@ plot_world_map <- function(x,
 
 
   key <- match.arg(key)
+  key <- paste0("province_", key)
   legend_position <- match.arg(legend_position)
 
   x <- data.frame(x)
 
   # filter Antarctica
   world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
-    dplyr::filter(continent != "Antarctica")
+    filter(continent != "Antarctica")
   # merge taiwan to china
   world$geometry[[41]] <- sf::st_union(
     world$geometry[[41]],
@@ -32,12 +33,11 @@ plot_world_map <- function(x,
   world <- merge(world, countries_en_zh)
 
   # correct countries names according to world map
-  world_ncov <-
-    dplyr::filter(
+  world_ncov <- filter(
       x,
       countryEnglishName != "Diamond Princess Cruise Ship"
     ) %>%
-    dplyr::mutate(countryEnglishName = dplyr::case_when(
+    mutate(countryEnglishName = dplyr::case_when(
       countryEnglishName == "United States of America" ~ "United States",
       countryEnglishName == "Kampuchea (Cambodia )" ~   "Cambodia",
       countryEnglishName == "SriLanka" ~ "Sri Lanka",
@@ -56,7 +56,7 @@ plot_world_map <- function(x,
     by.y = "countryEnglishName",
     all.x = TRUE
   )
-  map_dat <- dplyr::mutate_if(map_dat, is.numeric, ~ ifelse(is.na(.x), 0, .x))
+  map_dat <- mutate_if(map_dat, is.numeric, ~ ifelse(is.na(.x), 0, .x))
   map_dat$key_level <-  cut(
     map_dat$key,
     breaks = c(bins, Inf),
