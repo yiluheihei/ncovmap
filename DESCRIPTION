@@ -28,8 +28,10 @@ Suggests:
     knitr,
     rmarkdown,
     rnaturalearthdata,
+    rnaturalearthhires,
     curl
 Remotes: 
     yiluheihei/leafletCN,
-    tidyverse/dplyr
+    tidyverse/dplyr,
+    ropensci/rnaturalearthhires
 VignetteBuilder: knitr
