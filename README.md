@@ -7,6 +7,8 @@ Status](https://travis-ci.com/yiluheihei/ncovmap.svg?branch=master)](https://tra
 [![License: CC
 BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
+简体中文 | [English](README.en.md)
+
 ``` r
 knitr::opts_chunk$set(
   fig.path = "man/figures/",
