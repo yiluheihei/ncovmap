@@ -2,6 +2,11 @@ ncov 2019
 ================
 2020年03月21日
 
+[![Build
+Status](https://travis-ci.com/yiluheihei/ncovmap.svg?branch=master)](https://travis-ci.com/yiluheihei/ncovmap)
+[![License: CC
+BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+
 ``` r
 knitr::opts_chunk$set(
   fig.path = "man/figures/",
@@ -38,7 +43,7 @@ ncov
 ```
 
     ## All COVID 2019 Data
-    ## Updated at 2020-03-20 15:48:40 
+    ## Updated at 2020-03-21 02:59:14 
     ## From https://github.com/BlankerL/DXY-COVID-19-Data
 
 ## 提取省市或国家数据
@@ -50,7 +55,7 @@ china
 ```
 
     ## China COVID 2019 Data
-    ## Updated at 2020-03-20 09:31:14 
+    ## Updated at 2020-03-21 02:59:14 
     ## From https://github.com/BlankerL/DXY-COVID-19-Data
 
 ``` r
@@ -60,7 +65,7 @@ hubei
 ```
 
     ## Hubei COVID 2019 Data
-    ## Updated at 2020-03-20 07:29:42 
+    ## Updated at 2020-03-21 02:03:01 
     ## From https://github.com/BlankerL/DXY-COVID-19-Data
 
 ``` r
@@ -69,7 +74,7 @@ beijing
 ```
 
     ## Beijing COVID 2019 Data
-    ## Updated at 2020-03-20 06:19:56 
+    ## Updated at 2020-03-21 02:03:01 
     ## From https://github.com/BlankerL/DXY-COVID-19-Data
 
 ``` r
@@ -85,7 +90,7 @@ world
 ```
 
     ## World COVID 2019 Data
-    ## Updated at 2020-03-20 15:29:10 
+    ## Updated at 2020-03-21 02:59:14 
     ## From https://github.com/BlankerL/DXY-COVID-19-Data
 
 ## 国内总体疫情图
