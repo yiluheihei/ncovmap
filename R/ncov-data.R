@@ -100,8 +100,10 @@ unnest_province_ncov <- function(x) {
 }
 
 #' Show ncov
+#' @param x a ncov object
+#' @param ... extra arguments
 #' @export
-print.ncov <- function(x) {
+print.ncov <- function(x, ...) {
   type <- attr(x, "type")
   cat(type, "COVID 2019 Data\n")
   update_time <- as.character(x$updateTime[1])
@@ -115,6 +117,9 @@ print.ncov <- function(x) {
 #'
 #' @param x ncov data, return from `get_ncov()`
 #' @param i word
+#' @param j not used now
+#' @param latest logical, download the latest or all time-series ncov
+#' data,
 #'
 #' @export
 `[.ncov` <- function(x, i, j, latest = TRUE) {

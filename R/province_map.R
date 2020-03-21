@@ -148,6 +148,7 @@ plot_province_map2 <- function(ncov,
                                tile_type = NULL,
                                map_title = paste0(province, "nCoV")) {
   key <- match.arg(key)
+  key <- paste0("city_", key)
   scale <- match.arg(scale)
   legend_position <- match.arg(legend_position)
 
@@ -193,7 +194,7 @@ plot_province_map2 <- function(ncov,
     # province_cities_ncov <- sort_province_ncov_map(province_cities_ncov, province_map)
     # province_cities_ncov$cityName <- province_map$name
 
-    res <- ncovr::geojsonMap_legendless(
+    res <- geojsonMap_legendless(
       dat = province_cities_ncov,
       mapName = province,
       palette = color,

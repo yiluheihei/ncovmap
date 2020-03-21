@@ -12,7 +12,6 @@
 plot_china_map(
   ncov,
   key = c("confirmedCount", "suspectedCount", "curedCount", "deadCount"),
-  filter = "unkown",
   bins = c(0, 10, 100, 500, 1000, 10000),
   legend_title = "Confirmed",
   legend_position = c("bottomright", "topright", "bottomleft", "topleft"),
@@ -87,6 +86,8 @@ category, only worked while \code{scale} is "cat"}
 
 \item{tile_type}{function to define tile like amap or
 \code{\link[leaflet]{addTiles}}, default NULL}
+
+\item{x}{ncov data}
 }
 \description{
 China ncov map

@@ -77,7 +77,7 @@ ncov <- get_ncov2()
 
 ```{r subset}
 hubei <- ncov["湖北省"]
-guangdong <- ncov["广东"]
+guangdong <- ncov["广东省"]
 china <- ncov["china"]
 world <- ncov["world"]
 ```
@@ -108,16 +108,16 @@ plot_province_map2(guangdong, "广东省", bins = c(0, 10, 100, 200))
 直接画所有省份图，台湾,香港,澳门数据没有细分，不需要画。
  
 ```{r all-province}
-# 没有台湾,香港,澳门,南海等地数据
-provinces <- setdiff(
-  leafletCN::regionNames('china'),
-  c("台湾", "香港", 
-    "澳门", "南海诸岛"
-  )
-)
-
-htmltools::tagList(purrr::map(provinces, 
-  ~ plot_province_map(ncov[.x], .x, bins = c(0, 10, 100, 500, 1000, 10000))))
+# # 没有台湾,香港,澳门,南海等地数据
+# provinces <- setdiff(
+#   leafletCN::regionNames('china'),
+#   c("台湾", "香港", 
+#     "澳门", "南海诸岛"
+#   )
+# )
+# 
+# htmltools::tagList(purrr::map(provinces, 
+#   ~ plot_province_map(ncov[.x], .x, bins = c(0, 10, 100, 500, 1000, 10000))))
 ```
 
 虽然简单几行代码就可以把所有省份疫情图画出来，但是实际上根据各省份例数不同，个

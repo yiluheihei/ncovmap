@@ -10,6 +10,11 @@
 \item{x}{ncov data, return from `get_ncov()`}
 
 \item{i}{word}
+
+\item{j}{not used now}
+
+\item{latest}{logical, download the latest or all time-series ncov
+data,}
 }
 \description{
 Subset world, china, province, and other countries ncov data

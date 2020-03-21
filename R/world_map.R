@@ -1,4 +1,5 @@
 #' Plot world ncov map
+#' @param x ncov data
 #' @export
 #' @rdname plot_province_map
 plot_world_map <- function(x,
